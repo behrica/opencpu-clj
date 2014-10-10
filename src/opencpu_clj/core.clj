@@ -1,6 +1,6 @@
 (ns opencpu-clj.core
   (:require
-            [clj-http.lite.client :as client :refer [post]]
+            [clj-http.client :as client :refer [post]]
             [clojure.data.json :as json :refer [read-str write-str]]
             [clojure.core.matrix.dataset :as ds :refer[dataset row-maps]]
             )
@@ -35,14 +35,17 @@
 (defn call-function [base-url package-name function-name params output-format]
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
                               {:form-params params
-                               :content-type "application/x-www-form-urlencoded"
+                               :content-type :json
                                :throw-exceptions false
-                               })
+                               :debug-body true
+                              :debug true
+                              }
+                              )
         body (:body response)
         status (:status response)
         content-type (get (:headers response) "content-type")
         ]
-    (println "response: " response)
+    ;(println "response: " response)
     ;(println "params:" params)
     (cond
             (and (= "application/json" content-type)

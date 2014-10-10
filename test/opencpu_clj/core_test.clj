@@ -19,7 +19,5 @@
       (call-function "https://public.opencpu.org" "utils" "sessionInfo" {} "json") => "No method asJSON S3 class: sessionInfo\n")
 
 (fact "can pass dataset as json"
-      (call-function "https://public.opencpu.org" "base" "dim" {:x "[{\"a\":1}]"} :json) => [1 1]
-
-      )
+      (call-function "https://public.opencpu.org" "base" "dim" {:x [{"a":1}]} :json) => [1 1])
 

@@ -7,5 +7,5 @@
             :dependencies [[net.mikera/core.matrix "0.29.1"]
                             [org.clojure/clojure "1.6.0"]
                             [org.clojure/data.json "0.2.5"]
-                            [clj-http-lite "0.2.0"]]
+                            [clj-http "1.0.0"]]
             :profiles {:dev {:dependencies [[midje "1.6.3"]]}})

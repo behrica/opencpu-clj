@@ -15,17 +15,17 @@
                            "gdp.1970" gdp-1970})))
 
 (fact "can use clojure.matrix dataset as parameter - 1"
-  (let [mydat-json (ds-to-json mydat)]
+  (let [mydat-json (ds/row-maps mydat)]
     (call-function "https://public.opencpu.org" "base" "dim" {:x mydat-json} :json) => [3 3]))
 
 
 (fact "can use clojure.matrix dataset as parameter - 2"
-      (shape (json-to-ds (let [mydat-json (ds-to-json mydat)]
-                           (call-function "https://public.opencpu.org" "stats" "reshape"
+      (let [mydat-json (ds/row-maps mydat)]
+        (shape (json-to-ds    (call-function "https://public.opencpu.org" "stats" "reshape"
                                           {:data mydat-json
-                                           :varying  "[2,3]"
-                                           :v.names  "\"gdp\""
-                                           :direction "\"long\""
+                                           :varying  [2,3]
+                                           :v.names  "gdp"
+                                           :direction "long"
                                            }
 
-                                          :json)))) => [6 5])
+                                          :json))) => [6 5]))
