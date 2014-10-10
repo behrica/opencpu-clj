@@ -6,10 +6,6 @@
             )
   )
 
-(defn ds-to-json [dataset]
-  "Converts the dataset to a json represntation, which the R function fromJSON converts to an R dataframe"
-  (json/write-str (ds/row-maps dataset))
-  )
 
 (defn- extract-session-key [body]
   (let [first-line (first (clojure.string/split-lines body))]
@@ -20,9 +16,7 @@
 
 (defn json-to-ds [json]
     (let [column-names (keys (first json))]
-      (ds/dataset column-names json)
-
-      ))
+      (ds/dataset column-names json)))
 
 
 (defn get-dataset
@@ -39,8 +33,7 @@
                                :throw-exceptions false
                                :debug-body true
                               :debug true
-                              }
-                              )
+                              })
         body (:body response)
         status (:status response)
         content-type (get (:headers response) "content-type")
