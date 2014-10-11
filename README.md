@@ -24,24 +24,36 @@ To call R, there are low-level methods (in opencpu.clj), which just call the Ope
 They require parameter to be encoded in JSON or to be the keys coming from previous calls.
 The parameters must be named always.
 
-#### Low-level General call
+#### Low-level general call of an R function
 A general call to an R method looks like this:
 ````Clojure
 (call-R-function "http://public.opencpu.org" "stats" "rnorm" {:n 10})
 =>["/ocpu/tmp/x01f6261fc3/R/.val" "/ocpu/tmp/x01f6261fc3/stdout" "/ocpu/tmp/x01f6261fc3/source" "/ocpu/tmp/x01f6261fc3/console" "/ocpu/tmp/x01f6261fc3/info" "/ocpu/tmp/x01f6261fc3/files/DESCRIPTION"]
 ````
-This returns a session key. (Currently in the form of a list of session key urls)
-Further data of the call result can be obtained by accessing the different links.
-Some methods to do this will be provided soon.
+This calls the R function "rnorm" from package "stats" with parameter (n=10) on the OpenCPU server at url "http://public.opencpu.org".
 
-#### Low-level JSON-RPC style
+It returns a session key. (Currently in the form of a list of session key urls)
+Further data of the call result can be obtained by accessing the different links.
+Some methods to do so will be provided soon.
+
+These links give access to different data from the call, like:
+
+- the result of the call
+- the stdout of the call
+- the parameters the function was called with
+- the sessionInfo() of the call
+...
+
+#### Low-level call of R function - JSON-RPC style
 
 An example usage to call R function "seq", with named parameters "from" and "to".
-It gets called in "json-rpc style", so returns Json, which the method coerces to Clojure data structure (in this case a vector)
+It gets called in "json-rpc style", so returns Json, which gets coerced to a Clojure data structure (in this case a vector)
  
 Attention: This is not possible to do with all R functions. Some function result cannot be converted to Json by the OpenCPU server,
- and some json comming back cannot be converted to a Clojure datastructure. 
+ and some json coming back cannot be converted to a Clojure datastructure. 
  
+So in contrary to the "general" style, which always succeeds (given th parameter are ok, so R can do the call successfully),
+ the Json style might fail to marshall the result back from the server.
 ````Clojure
 (call-R-function "http://public.opencpu.org" "base" "seq" {:from 1 :to 5} :json)
 =>(1 2 3 4 5)
