@@ -21,10 +21,9 @@
 
 (defn get-dataset
   [base-url package-name dataset-path]
-  (let [resp (client/get (format "%s/data/%s/json" (make-package-url base-url package-name) dataset-path))
-        data (json/read-str (:body resp))
-        ]
-        (json-to-ds data)))
+  (let [resp (client/get (format "%s/data/%s/json" (make-package-url base-url package-name) dataset-path)
+                         {:as :json})]
+    (json-to-ds (:body resp))))
 
 (defn call-function [base-url package-name function-name params output-format]
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))

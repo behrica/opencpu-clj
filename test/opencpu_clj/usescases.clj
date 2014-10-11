@@ -21,7 +21,7 @@
 
 (fact "can use clojure.matrix dataset as parameter - 2"
       (let [mydat-json (ds/row-maps mydat)]
-        (shape (json-to-ds    (call-function "https://public.opencpu.org" "stats" "reshape"
+        (shape (json-to-ds (call-function "https://public.opencpu.org" "stats" "reshape"
                                           {:data mydat-json
                                            :varying  [2,3]
                                            :v.names  "gdp"
