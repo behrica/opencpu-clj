@@ -15,7 +15,6 @@
 (defn call-R-function [base-url package-name function-name params output-format]
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
                               {:form-params params
-                               :content-type :json
                                :throw-exceptions false
                                ;:debug-body true
                                ;:debug true

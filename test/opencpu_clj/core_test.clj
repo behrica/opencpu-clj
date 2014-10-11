@@ -3,6 +3,7 @@
             [opencpu-clj.core :refer :all]
             [clojure.core.matrix :refer [shape]]
             [opencpu-clj.test-settings :refer [server-url]]
+            [clojure.data.json :as json :refer[write-str]]
             ))
 
 
@@ -22,5 +23,8 @@
       (call-function server-url "utils" "sessionInfo" {} :json) => "No method asJSON S3 class: sessionInfo\n")
 
 (fact "can pass dataset as json"
-      (call-function server-url "base" "dim" {:x [{"a":1}]} :json) => [1 1])
+      (call-function server-url "base" "dim" {:x (write-str [{"a":1}]) } :json) => [1 1])
 
+(fact "can pass unquoted symbols"
+      (count (call-function "http://public.opencpu.org" "stats" "lm" {:formula "mpg~am" :data "mtcars"} "")) => 184
+      )
