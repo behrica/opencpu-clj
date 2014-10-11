@@ -35,12 +35,12 @@ endpoint | supported | description
 endpoint | supported | description
 ----------|-----------|------------
 /ocpu/tmp/{key}/	|| List available output for this session.
-/ocpu/tmp/{key}/R	||R objects stored in this session. Interface using R object API, same as objects in packages.
+/ocpu/tmp/{key}/R	|yes|R objects stored in this session. Interface using R object API, same as objects in packages.
 /ocpu/tmp/{key}/graphics/	|| Graphics (plots) stored in this session.
 /ocpu/tmp/{key}/graphics/{n}/{format}||	Retrieve plot number {n} in output format {format}. Format is usually one of png, pdf or svg. The {n} is an integer or "last".
-/ocpu/tmp/{key}/source	|| Reads the input source code for this session.
-/ocpu/tmp/{key}/stdout	||Shows text printed to STDOUT in this session.
-/ocpu/tmp/{key}/console	|| Shows the console input/output for this session (combines source and stdout)
+/ocpu/tmp/{key}/source	|yes| Reads the input source code for this session.
+/ocpu/tmp/{key}/stdout	|yes|Shows text printed to STDOUT in this session.
+/ocpu/tmp/{key}/console	|yes| Shows the console input/output for this session (combines source and stdout)
 /ocpu/tmp/{key}/zip	||Download the entire session as a zip archive.
 /ocpu/tmp/{key}/tar	||Download the entire session as a gzipped tarball.
 /ocpu/tmp/{key}/files/*	|| Interfaces to the file API in the working dir of the session.

@@ -29,12 +29,13 @@ A general call to an R method looks like this:
 ````Clojure
 (call-R-function "http://public.opencpu.org" "stats" "rnorm" {:n 10})
 =>["/ocpu/tmp/x01f6261fc3/R/.val" "/ocpu/tmp/x01f6261fc3/stdout" "/ocpu/tmp/x01f6261fc3/source" "/ocpu/tmp/x01f6261fc3/console" "/ocpu/tmp/x01f6261fc3/info" "/ocpu/tmp/x01f6261fc3/files/DESCRIPTION"]
+(get-key-path "http://public.opencpu.org"  "/ocpu/tmp/x01f6261fc3/R/.val" :json)
+=>(0.4976 -0.3589 -0.8081 -1.4511 0.2412 0.4624 0.7201 -0.5294 0.7155 0.6794)
 ````
 This calls the R function "rnorm" from package "stats" with parameter (n=10) on the OpenCPU server at url "http://public.opencpu.org".
 
 It returns a session key. (Currently in the form of a list of session key urls)
-Further data of the call result can be obtained by accessing the different links.
-Some methods to do so will be provided soon.
+Further data of the call result can be obtained by accessing the different links via the "get-key-path" method.
 
 These links give access to different data from the call, like:
 
@@ -43,6 +44,8 @@ These links give access to different data from the call, like:
 - the parameters the function was called with
 - the sessionInfo() of the call
 ...
+
+So to access the return value of a function, two calls are required.
 
 #### Low-level call of R function - JSON-RPC style
 
