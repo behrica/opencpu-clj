@@ -12,12 +12,22 @@
                          {:as :json})]
     (:body resp)))
 
-(defn call-R-function [base-url package-name function-name params output-format]
+(defn call-R-function
+  ([base-url package-name function-name params]
+  (call-R-function base-url package-name function-name params ""))
+  ([base-url package-name function-name params output-format]
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
                               {:form-params params
                                :throw-exceptions false
                                ;:debug-body true
                                ;:debug true
                                :as :auto
-                              })]
-    (:body response)))
+                              })
+        status (:status response)
+        body (:body response)
+        ]
+    (if (= 201 status)
+      (clojure.string/split-lines body)
+      body
+        )
+    )))
