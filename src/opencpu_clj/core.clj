@@ -18,6 +18,12 @@
   [base-url package-name dataset-path]
   (json-to-ds (ocpu/get-R-dataset base-url package-name dataset-path)))
 
+
 (defn call-function
-  [base-url package-name function-name params output-format]
-  (ocpu/call-R-function base-url package-name function-name params output-format))
+   [base-url package-name function-name params]
+  (ocpu/call-R-function base-url package-name function-name params ""))
+
+(defn call-function-json-RPC
+  [base-url package-name function-name params]
+  (ocpu/call-R-function base-url package-name function-name params :json))
+

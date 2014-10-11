@@ -16,16 +16,16 @@
 
 (fact "can use clojure.matrix dataset as parameter - 1"
   (let [ds (ds/row-maps mydat)]
-    (call-function server-url "base" "dim" {:x (j ds)} :json) => [3 3]))
+    (call-function-json-RPC server-url "base" "dim" {:x (j ds)}) => [3 3]))
 
 
 (fact "can use clojure.matrix dataset as parameter - 2"
       (let [mydat-json (ds/row-maps mydat)]
-        (shape (json-to-ds (call-function server-url "stats" "reshape"
+        (shape (json-to-ds (call-function-json-RPC server-url "stats" "reshape"
                                           {:data (j mydat-json)
                                            :varying  (j [2,3])
                                            :v.names  (j "gdp")
                                            :direction (j "long")
                                            }
 
-                                          :json))) => [6 5]))
+                                          ))) => [6 5]))
