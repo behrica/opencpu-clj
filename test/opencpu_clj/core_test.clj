@@ -7,7 +7,7 @@
 
 
 (fact "Can retrieve datasets"
-  (shape ( get-dataset  server-url "MASS" "Boston")) => [506 14])
+  (shape ( get-dataset server-url "MASS" "Boston")) => [506 14])
 
 (fact "can call function which returns vector"
   (call-function-json-RPC server-url "base" "seq" {:from 1 :to 5})
@@ -30,6 +30,8 @@
 (facts
   "Methods can be called RPC style and normal"
   (fact "methjod 'seq' can be called RPC style"
-        (call-function-json-RPC "http://localhost:6124" "base" "seq" {:from 1 :to 10}) => (range 1 11)
-    )
+        (call-function-json-RPC "http://localhost:6124" "base" "seq" {:from 1 :to 10}) => (range 1 11))
+  (fact "methjod 'seq' can be called non-RPC style"
+        (call-function "http://localhost:6124" "base" "seq" {:from 1 :to 10}) => #"/ocpu/tmp.*")
+
   )
