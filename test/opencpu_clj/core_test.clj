@@ -13,7 +13,7 @@
 
 (fact "can call function which returns a S3 class"
       (count (call-function "https://public.opencpu.org" "utils" "sessionInfo" {} ""))
-      => 11)
+      => 184)
 
 (fact "status 400 returns plain text as is"
       (call-function "https://public.opencpu.org" "utils" "sessionInfo" {} :json) => "No method asJSON S3 class: sessionInfo\n")
