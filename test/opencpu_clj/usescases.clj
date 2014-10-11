@@ -3,6 +3,7 @@
             [opencpu-clj.core :refer :all]
             [clojure.core.matrix.dataset :as ds :refer[dataset]]
             [clojure.core.matrix :refer [shape]]
+            [opencpu-clj.test-settings :refer [server-url]]
             ))
 
 (def mydat
@@ -16,12 +17,12 @@
 
 (fact "can use clojure.matrix dataset as parameter - 1"
   (let [mydat-json (ds/row-maps mydat)]
-    (call-function "https://public.opencpu.org" "base" "dim" {:x mydat-json} :json) => [3 3]))
+    (call-function server-url "base" "dim" {:x mydat-json} :json) => [3 3]))
 
 
 (fact "can use clojure.matrix dataset as parameter - 2"
       (let [mydat-json (ds/row-maps mydat)]
-        (shape (json-to-ds (call-function "https://public.opencpu.org" "stats" "reshape"
+        (shape (json-to-ds (call-function server-url "stats" "reshape"
                                           {:data mydat-json
                                            :varying  [2,3]
                                            :v.names  "gdp"
