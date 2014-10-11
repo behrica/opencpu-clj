@@ -57,11 +57,19 @@ Attention: This is not possible to do with all R functions. Some function result
  
 So in contrary to the "general" style, which always succeeds (given th parameter are ok, so R can do the call successfully),
  the Json style might fail to marshall the result back from the server.
+
 ````Clojure
 (call-R-function "http://public.opencpu.org" "base" "seq" {:from 1 :to 5} :json)
 =>(1 2 3 4 5)
 ````
 
+An other example is some matrix calculations done in R:
+
+````Clojure
+(def m (m/matrix [[13 2][5 4]]))
+(call-function-json-RPC "http://public.opencpu.org" "base" "eigen" {:x (json/write-str m)})
+=> {:values [14 3], :vectors [[0.8944 -0.1961] [0.4472 0.9806]]}
+````
 
 
 
