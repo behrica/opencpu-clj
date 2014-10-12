@@ -1,11 +1,13 @@
 #Status of support for opencpu API methods
 
+The "supported = yes" in ths table means, that thre is a method t access the data "as-is" from that endpoint.
+
 ## The API Libraries
 endpoint | supported | description
 ----------|-----------|------------
 /ocpu/library/{pkgname}/ |	|R packages installed in one of the global libraries on the server.
 /ocpu/user/{username}/library/{pkgname}/||	R packages installed in the home library of Linux user {username}.
-/ocpu/tmp/{key}/||	Temporary sessions, which hold outputs from a function/script RPC.
+/ocpu/tmp/{key}/|yes|	Temporary sessions, which hold outputs from a function/script RPC.
 /ocpu/cran/{pkgname}/||	Interfaces to the R package {pkgname} that is current on CRAN.
 /ocpu/bioc/{pkgname}/||	Interfaces to the R package {pkgname} that is current on BioConductor.
 /ocpu/github/{gituser}/{pkgname}/||	Interfaces to R package {pkgname} in the master branch of the identically named repository from github user {gituser}.
@@ -34,13 +36,13 @@ endpoint | supported | description
 ##The R session API
 endpoint | supported | description
 ----------|-----------|------------
-/ocpu/tmp/{key}/	|| List available output for this session.
+/ocpu/tmp/{key}/	|yes| List available output for this session.
 /ocpu/tmp/{key}/R	|yes|R objects stored in this session. Interface using R object API, same as objects in packages.
-/ocpu/tmp/{key}/graphics/	|| Graphics (plots) stored in this session.
-/ocpu/tmp/{key}/graphics/{n}/{format}||	Retrieve plot number {n} in output format {format}. Format is usually one of png, pdf or svg. The {n} is an integer or "last".
+/ocpu/tmp/{key}/graphics/	|yes| Graphics (plots) stored in this session.
+/ocpu/tmp/{key}/graphics/{n}/{format}|yes|	Retrieve plot number {n} in output format {format}. Format is usually one of png, pdf or svg. The {n} is an integer or "last".
 /ocpu/tmp/{key}/source	|yes| Reads the input source code for this session.
 /ocpu/tmp/{key}/stdout	|yes|Shows text printed to STDOUT in this session.
 /ocpu/tmp/{key}/console	|yes| Shows the console input/output for this session (combines source and stdout)
-/ocpu/tmp/{key}/zip	||Download the entire session as a zip archive.
+/ocpu/tmp/{key}/zip	|yes|Download the entire session as a zip archive.
 /ocpu/tmp/{key}/tar	||Download the entire session as a gzipped tarball.
-/ocpu/tmp/{key}/files/*	|| Interfaces to the file API in the working dir of the session.
+/ocpu/tmp/{key}/files/*	|yes| Interfaces to the file API in the working dir of the session.

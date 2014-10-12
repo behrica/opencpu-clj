@@ -31,7 +31,7 @@
       body))))
 
 
-(defn get-session-path [base-url session-path output-format]
+(defn session [base-url session-path output-format]
   (:body (client/get (format "%s/%s/%s" base-url session-path (name output-format))
                      {:as :auto
                      })))
