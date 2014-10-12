@@ -1,6 +1,6 @@
 # opencpu-clj
 
-A Clojure library designed to use the OpenCPU API from Clojure.
+A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clojure.
 
 ## Usage
 
@@ -55,7 +55,7 @@ It gets called in "json-rpc style", so returns Json, which gets coerced to a Clo
 Attention: This is not possible to do with all R functions. Some function result cannot be converted to Json by the OpenCPU server,
  and some json coming back cannot be converted to a Clojure datastructure. 
  
-So in contrary to the "general" style, which always succeeds (given th parameter are ok, so R can do the call successfully),
+So in contrary to the "general" style, which always succeeds (given the parameter are ok, so R can do the call successfully),
  the Json style might fail to marshall the result back from the server.
 
 ````Clojure
