@@ -16,7 +16,7 @@
 
 (defn get-dataset
   [base-url package-name dataset-path]
-  (json-to-ds (ocpu/get-R-dataset base-url package-name dataset-path)))
+  (json-to-ds (ocpu/get-R-dataset base-url package-name dataset-path :json :json)))
 
 
 (defn call-function

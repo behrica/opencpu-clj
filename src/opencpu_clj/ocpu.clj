@@ -7,9 +7,10 @@
 
 
 (defn get-R-dataset
-  [base-url package-name dataset-path]
-  (let [resp (client/get (format "%s/data/%s/json" (make-package-url base-url package-name) dataset-path)
-                         {:as :json})]
+  [base-url package-name dataset-path output-format as]
+  (let [resp (client/get (format "%s/data/%s/%s" (make-package-url base-url package-name) dataset-path (if output-format (name output-format) ""))
+                         {:as as }
+                         )]
     (:body resp)))
 
 (defn call-R-function
