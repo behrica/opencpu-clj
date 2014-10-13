@@ -28,9 +28,9 @@ endpoint | supported | description
 ## The R object API
 endpoint | supported | description
 ----------|-----------|------------
-../R/|yes|	List R objects in this package or session. 
-../data/|yes|	List data objects in a package.
-../{R or data}/{object}|yes(calling R function)|	Read object in default format. If object is a function, it can be called using HTTP POST.
+../R/|yes, via "packge"|	List R objects in this package or session. 
+../data/|yes,via "package"|	List data objects in a package.
+../{R or data}/{object}|yes|	Read object in default format. If object is a function, it can be called using HTTP POST.
 ../{R or data}/{object}/{format}|yes|	Retrieve an R object in a particular output format (see section on output formats).
 
 ##The R session API

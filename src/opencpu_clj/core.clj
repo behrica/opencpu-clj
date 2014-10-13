@@ -21,9 +21,9 @@
 
 (defn call-function
    [base-url package-name function-name params]
-  (ocpu/call-R-function base-url package-name function-name params))
+  (ocpu/object base-url package-name function-name params))
 
 (defn call-function-json-RPC
   [base-url package-name function-name params]
-  (ocpu/call-R-function base-url package-name function-name params :json))
+  (ocpu/object base-url package-name function-name params :json))
 

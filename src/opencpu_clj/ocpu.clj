@@ -13,23 +13,34 @@
                          )]
     (:body resp)))
 
-(defn call-R-function
+(defn object
+  ([base-url package-name function-name]
+   (object base-url package-name function-name nil))
   ([base-url package-name function-name params]
-  (call-R-function base-url package-name function-name params ""))
+  (object base-url package-name function-name params ""))
   ([base-url package-name function-name params output-format]
-  (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
-                              {:form-params params
-                               :throw-exceptions false
-                               ;:debug-body true
-                               ;:debug true
-                               :as :auto
-                              })
-        status (:status response)
-        body (:body response)
-        ]
-    (if (= 201 status)
-      (clojure.string/split-lines body)
-      body))))
+
+   (if params
+     (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
+                                 {:form-params params
+                                  :throw-exceptions false
+                                  ;:debug-body true
+                                  ;:debug true
+                                  :as :auto
+                                 })
+           status (:status response)
+           body (:body response)
+           ]
+       (if (= 201 status)
+         (clojure.string/split-lines body)
+         body))
+
+
+     (:body (client/get (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format)))
+                  )
+
+     )
+  ))
 
 
 (defn session [base-url session-path output-format]
@@ -48,7 +59,7 @@
                      )))
 
 (defn package [base-url package-name path & man-params]
-  (:body (client/get (format "%s/%s "
+  (:body (client/get (format "%s/%s"
                              (make-package-url base-url package-name)
                              (if (= "man" path)
                                (clojure.string/join "/" (cons path (map name man-params)))
