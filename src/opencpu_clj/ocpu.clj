@@ -35,3 +35,20 @@
   (:body (client/get (format "%s/%s/%s" base-url session-path (name output-format))
                      {:as :auto
                      })))
+
+
+(defn library [base-url package-location-info package-name]
+  ;{:type :user :user-name "carsten"}
+  (:body (client/get (format "%s/ocpu/%s/%s/library/%s"
+                             base-url
+                             (name (:type package-location-info))
+                             (name (:user-name package-location-info))
+                             package-name)
+                     )))
+
+(defn package [base-url package-name path & man-params]
+  (:body (client/get (format "%s/%s "
+                             (make-package-url base-url package-name)
+                             (if (= "man" path)
+                               (clojure.string/join "/" (cons path (map name man-params)))
+                               path)))))
