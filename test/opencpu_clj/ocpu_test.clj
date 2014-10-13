@@ -18,9 +18,6 @@
 (fact "can access data in package as json"
       (object server-url "MASS" "Boston" nil :json) => #"\[\n    \{\n        \"crim\"\:.*")
 
-(fact "can access data in package as json"
-      (object server-url "MASS" "R") => #"\[\n    \{\n        \"crim\"\:.*")
-
 
 (fact "can access session path as json"
       (let [first-key-path (first (object server-url "base" "seq" {:from 1 :to 5}))]
@@ -49,5 +46,10 @@
       (package server-url "MASS" "R" ) => #"abbey\n.*")
 
 
+
+
 (fact "can get info on user package"
       (library server-url {:type :user :user-name "carsten"} "ggplot2") => #"carsten.*")
+
+(fact "can get list of installed packages "
+      (library server-url) => #"analogsea\n.*")
