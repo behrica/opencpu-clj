@@ -21,11 +21,11 @@
       (call-function-json-RPC server-url "base" "dim" {:x (j [{"a":1}]) }) => [1 1])
 
 (fact "can pass unquoted symbols"
-      (count (call-function "http://public.opencpu.org" "stats" "lm" {:formula "mpg~am" :data "mtcars"})) => 6)
+      (count (call-function server-url "stats" "lm" {:formula "mpg~am" :data "mtcars"})) => 6)
 
 (facts
   "Methods can be called RPC style and normal"
   (fact "methjod 'seq' can be called RPC style"
-        (call-function-json-RPC "http://localhost:6124" "base" "seq" {:from 1 :to 10}) => (range 1 11))
+        (call-function-json-RPC server-url "base" "seq" {:from 1 :to 10}) => (range 1 11))
   (fact "methjod 'seq' can be called non-RPC style"
-        (first (call-function "http://localhost:6124" "base" "seq" {:from 1 :to 10})) => #"/ocpu/tmp.*"))
+        (first (call-function server-url "base" "seq" {:from 1 :to 10})) => #"/ocpu/tmp.*"))
