@@ -1,5 +1,5 @@
 (ns opencpu-clj.core
-  (:require
+  (:require [clojure.data.json :as json :refer[read-str]]
             [clojure.string :as s]
             [clojure.core.matrix.dataset :as ds]
             [opencpu-clj.ocpu :as ocpu]))
@@ -18,7 +18,7 @@
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It get return as a core.matric.dataset"
   [base-url package-name dataset-path]
-  (json-to-ds (ocpu/get-R-dataset base-url package-name dataset-path :json :json)))
+  (json-to-ds (ocpu/object base-url package-name :data dataset-path nil :json)))
 
 
 (defn call-function
@@ -33,7 +33,7 @@
    But the session key can be used as a parameter to call other functions.
    "
    [base-url package-name function-name params]
-  (let [session-links (ocpu/object base-url package-name function-name params)]
+  (let [session-links (ocpu/object base-url package-name :R function-name params)]
     (nth (s/split (first session-links) #"/") 3)))
 
 (defn session-data [server-url session-key data-path output-format]
@@ -48,6 +48,6 @@
  If the return value cannot be converted to json by OpenCPU, this function will fail."
   (defn call-function-json-RPC
   [base-url package-name function-name params]
-  (ocpu/object base-url package-name function-name params :json))
+  (ocpu/object base-url package-name :R function-name params :json))
 
 

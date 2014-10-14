@@ -7,6 +7,12 @@ A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clo
 The focus of this library will be to allow Clojure applications, mainly Incanter, to call arbitrary R functions and access data from R packages.
 For the current list of supported API methods see [here:] (doc/endpoints.md)
 
+
+The low-level package contains four methods, which match the names of teh API endpoints:
+- object
+- library
+- package
+
 ### Accessing data from an R package
 
 To access a dataset from inside an R package, the get-dataset method can be used like this.
@@ -25,17 +31,18 @@ They require parameter to be encoded in JSON or to be the keys coming from previ
 The parameters must be named always.
 
 #### Low-level general call of an R function
+
 A general call to an R method looks like this:
 ````Clojure
-(call-R-function "http://public.opencpu.org" "stats" "rnorm" {:n 10})
+(object "http://public.opencpu.org" "stats" "rnorm" {:n 10})
 =>["/ocpu/tmp/x01f6261fc3/R/.val" "/ocpu/tmp/x01f6261fc3/stdout" "/ocpu/tmp/x01f6261fc3/source" "/ocpu/tmp/x01f6261fc3/console" "/ocpu/tmp/x01f6261fc3/info" "/ocpu/tmp/x01f6261fc3/files/DESCRIPTION"]
 (session "http://public.opencpu.org"  "/ocpu/tmp/x01f6261fc3/R/.val" :json)
 =>(0.4976 -0.3589 -0.8081 -1.4511 0.2412 0.4624 0.7201 -0.5294 0.7155 0.6794)
 ````
 This calls the R function "rnorm" from package "stats" with parameter (n=10) on the OpenCPU server at url "http://public.opencpu.org".
 
-It returns a session key. (Currently in the form of a list of session key urls)
-Further data of the call result can be obtained by accessing the different links via the "get-key-path" method.
+It returns a session key. (In the form of a list of session key links)
+Further data of the call result can be obtained by accessing the different links via the "session" method.
 
 These links give access to different data from the call, like:
 
@@ -59,7 +66,7 @@ So in contrary to the "general" style, which always succeeds (given the paramete
  the Json style might fail to marshall the result back from the server.
 
 ````Clojure
-(call-R-function "http://public.opencpu.org" "base" "seq" {:from 1 :to 5} :json)
+(object "http://public.opencpu.org" "base" "seq" {:from 1 :to 5} :json)
 =>(1 2 3 4 5)
 ````
 

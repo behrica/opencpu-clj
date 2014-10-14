@@ -35,19 +35,22 @@
 
 
 (defn object
-  ([base-url package-name function-name]
-   (object base-url package-name function-name nil))
-  ([base-url package-name function-name params]
-  (object base-url package-name function-name params ""))
-  ([base-url package-name function-name params output-format]
+  ([base-url package-name object-type object-name]
+   (object base-url package-name object-type object-name nil))
+  ([base-url package-name object-type object-name params]
+  (object base-url package-name object-type object-name params ""))
+  ([base-url package-name object-type object-name params output-format]
 
    (if params
-     (do-post base-url package-name function-name  output-format params)
+     (do-post base-url package-name object-name  output-format params)
 
-     (:body (client/get (format "%s/R/%s/%s "
+     (:body (client/get (format "%s/%s/%s/%s "
                                 (make-package-url base-url package-name)
-                                function-name
-                                (name output-format)))))))
+                                (name object-type)
+                                object-name
+                                (name output-format))
+                        {:as :auto}
+                        )))))
 
 
 (defn session [base-url session-path output-format]
