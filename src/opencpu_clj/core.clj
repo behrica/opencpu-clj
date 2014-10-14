@@ -1,17 +1,17 @@
 (ns opencpu-clj.core
   (:require
-            [clojure.core.matrix.dataset :as ds :refer[dataset row-maps]]
+            [clojure.string :as s]
+            [clojure.core.matrix.dataset :as ds]
             [opencpu-clj.ocpu :as ocpu]))
-
-;TODO use this
-(defn- extract-session-key [body]
-  (let [first-line (first (clojure.string/split-lines body))]
-    (nth (clojure.string/split  first-line #"/" ) 3)))
-
 
 (defn json-to-ds [json]
     (let [column-names (keys (first json))]
       (ds/dataset column-names json)))
+
+(defn- path-to-keyword [path]
+  (keyword (s/join "/" (drop 4 (s/split path #"/"))))
+
+  )
 
 
 (defn get-dataset
@@ -33,7 +33,12 @@
    But the session key can be used as a parameter to call other functions.
    "
    [base-url package-name function-name params]
-  (ocpu/object base-url package-name function-name params))
+  (let [session-links (ocpu/object base-url package-name function-name params)]
+    (nth (s/split (first session-links) #"/") 3)))
+
+(defn session-data [server-url session-key data-path output-format]
+  (ocpu/session server-url (format "/ocpu/tmp/%s/%s" session-key data-path) output-format))
+
 
 "Calls a function of an installed package on the OpenCPU server.
  The parameters to the metho a given as a map, which need to match the named parametesr of the
@@ -46,5 +51,3 @@
   (ocpu/object base-url package-name function-name params :json))
 
 
-;TODO
-;method to access session links
