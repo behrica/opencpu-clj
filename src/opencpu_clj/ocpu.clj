@@ -10,14 +10,6 @@
   (format "%s/ocpu/library/%s" base-url package-name))
 
 
-(defn get-R-dataset
-  [base-url package-name dataset-path output-format as]
-  (let [resp (client/get (format "%s/data/%s/%s" (make-package-url base-url package-name) dataset-path (if output-format (name output-format) ""))
-                         {:as as }
-                         )]
-    (:body resp)))
-
-
 (defn- do-post [base-url package-name function-name output-format params]
 
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
@@ -33,6 +25,9 @@
       (clojure.string/split-lines body) ;todo this is data transformation. Should be on higher level ?
       body)))
 
+(defn- get-body [url]
+  (:body (client/get url {:as :auto})))
+
 
 (defn object
   ([base-url package-name object-type object-name]
@@ -43,36 +38,29 @@
 
    (if params
      (do-post base-url package-name object-name  output-format params)
-
-     (:body (client/get (format "%s/%s/%s/%s "
-                                (make-package-url base-url package-name)
-                                (name object-type)
-                                object-name
-                                (name output-format))
-                        {:as :auto}
-                        )))))
+     (get-body (format "%s/%s/%s/%s" (make-package-url base-url package-name)
+                                     (name object-type)
+                                      object-name
+                                     (name output-format))))))
 
 
 (defn session [base-url session-path output-format]
-  (:body (client/get (format "%s/%s/%s" base-url session-path (name output-format))
-                     {:as :auto})))
+  (get-body (format "%s/%s/%s" base-url session-path (name output-format))))
 
 
 (defn library
   ([base-url]
-  (:body (client/get (format "%s/ocpu/library" base-url))))
+  (get-body (format "%s/ocpu/library" base-url)))
 
   ([base-url package-location-info package-name]
-  (:body (client/get (format "%s/ocpu/%s/%s/library/%s"
+  (get-body (format "%s/ocpu/%s/%s/library/%s"
                              base-url
                              (name (:type package-location-info))
                              (name (:user-name package-location-info))
-                             package-name)))))
+                             package-name))))
 
 
 (defn package [base-url package-name path & man-params]
-  (:body (client/get (format "%s/%s"
-                             (make-package-url base-url package-name)
-                             (if (= "man" path)
-                               (clojure.string/join "/" (cons path (map name man-params)))
-                               path)))))
+  (get-body (format "%s/%s"
+                  (make-package-url base-url package-name)
+                  (clojure.string/join "/" (cons path (map name man-params))))))
