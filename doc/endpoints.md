@@ -5,7 +5,7 @@ The "supported = yes" in this table means, that there is a method to access the 
 ## The API Libraries
 endpoint | supported | description
 ----------|-----------|------------
-/ocpu/library/{pkgname}/ |	|R packages installed in one of the global libraries on the server.
+/ocpu/library/{pkgname}/ |yes	|R packages installed in one of the global libraries on the server.
 /ocpu/user/{username}/library/{pkgname}/||	R packages installed in the home library of Linux user {username}.
 /ocpu/tmp/{key}/|yes|	Temporary sessions, which hold outputs from a function/script RPC.
 /ocpu/cran/{pkgname}/||	Interfaces to the R package {pkgname} that is current on CRAN.

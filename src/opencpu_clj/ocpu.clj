@@ -52,6 +52,10 @@
   ([base-url]
   (get-body (format "%s/ocpu/library" base-url)))
 
+  ([base-url package-name]
+   (get-body (format "%s/ocpu/library/%s" base-url package-name)))
+
+
   ([base-url package-location-info package-name]
   (get-body (format "%s/ocpu/%s/%s/library/%s"
                              base-url

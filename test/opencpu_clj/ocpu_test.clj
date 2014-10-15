@@ -46,5 +46,8 @@
 (fact "can get info on user package"
       (library "http://public.opencpu.org" {:type :user :user-name "jeroen"} "jsonlite") => (contains "Information on package 'jsonlite'"))
 
-(fact "can get list of installed packages "
+(fact "can get list of installed packages"
       (library server-url) => (contains "jsonlite"))
+
+(fact "can get info on a package"
+      (library server-url "jsonlite") => (contains "\n\t\tInformation on package 'jsonlite'"))

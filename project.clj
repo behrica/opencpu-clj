@@ -1,5 +1,5 @@
 (defproject opencpu-clj "0.0.1-SNAPSHOT"
-            :description "Incanter-ocpu is the ocpu module of the Incanter project."
+            :description "OpenCPU-clj is a Clojure library for using the OpenCPU API"
             :url "http://incanter.org/"
             :license {:name "Eclipse Public License"
                       :url  "http://www.eclipse.org/legal/epl-v10.html"}
