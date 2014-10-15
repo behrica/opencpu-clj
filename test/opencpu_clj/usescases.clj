@@ -15,12 +15,12 @@
                            "gdp.1960" gdp-1960
                            "gdp.1970" gdp-1970})))
 
-(fact "can use clojure.matrix dataset as parameter - 1"
+(fact "can use clojure.matrix dataset as inline parameter - 1"
   (let [ds (ds/row-maps mydat)]
     (call-function-json-RPC server-url "base" "dim" {:x (j ds)}) => [3 3]))
 
 
-(fact "can use clojure.matrix dataset as parameter - 2"
+(fact "can use clojure.matrix dataset as inline parameter - 2"
       (let [mydat-json (ds/row-maps mydat)]
         (shape (json-to-ds (call-function-json-RPC server-url "stats" "reshape"
                                           {:data (j mydat-json)
@@ -61,3 +61,24 @@
          :testing-shape (shape testing)
         }
       ) => {:training-shape [3451 58] :testing-shape [1150 58]})
+
+
+;(fact "can evaluate larger pieces of R code and get variables back as clojure data sets"
+;      (let [session-key (call-function server-url "evaluate" "evaluate"
+;                                       {:input "
+;             library(caret);library(kernlab);data(spam);
+;             inTrain <- createDataPartition(y=spam$type,p=myp,list=F);
+;             training <- spam[inTrain,];
+;             testing <- spam[-inTrain,]
+;        " :envir (j ["myp" 0.75])
+;                                       })
+;            training (json-to-ds (session-data server-url session-key "R/training" :json))
+;            testing (json-to-ds (session-data server-url session-key "R/testing" :json))
+;            ]
+;        {:training-shape (shape training)
+;         :testing-shape (shape testing)
+;        }) => {:training-shape [3451 58] :testing-shape [1150 58]})
+
+(fact "can work woth data sets on server"
+      (let [session-key-spam (call-function "http://public.opencpu.org" "base" "identity" {:x "data(spam,package=\"kernlab\");spam"})]
+        (call-function-json-RPC "http://public.opencpu.org" "base" "dim" {:x session-key-spam})) => [4601,58])

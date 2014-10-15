@@ -60,9 +60,9 @@
 (defn eval-R
   "Evaluates arbitrary R expressions.
   Important: They need to be self contained, as they run in an empty R session."
-  ([server-url r-code out-variables]
-  (eval-R server-url r-code out-variables :json))
+  ([server-url r-code input-variables out-variables]
+  (eval-R server-url r-code input-variables out-variables :json))
 
-  ([server-url r-code out-variables output-format]
+  ([server-url r-code input-variables out-variables output-format]
   (let [session (call-function server-url "evaluate" "evaluate" {:input r-code})]
     (reduce conj (map #(get-data server-url session % output-format) out-variables)))))

@@ -21,6 +21,9 @@
         status (:status response)
         body (:body response)
         ]
+    ;(println "!!------------------------------------------------")
+    ;(println body)
+    ;(println "!!------------------------------------------------")
     (if (= 201 status)
       (clojure.string/split-lines body) ;todo this is data transformation. Should be on higher level ?
       body)))
