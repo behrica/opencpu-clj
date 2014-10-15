@@ -14,11 +14,12 @@
   )
 
 
+
 (defn get-dataset
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It get return as a core.matric.dataset"
-  [base-url package-name dataset-path]
-  (json-to-ds (ocpu/object base-url package-name :data dataset-path nil :json)))
+  [server-url package-name dataset-path]
+  (json-to-ds (ocpu/object server-url package-name :data dataset-path nil :json)))
 
 
 (defn call-function
@@ -32,8 +33,8 @@
    (Which means then that the result cannot be transfered in an usefull way from the server to the caller.)
    But the session key can be used as a parameter to call other functions.
    "
-   [base-url package-name function-name params]
-  (let [session-links (ocpu/object base-url package-name :R function-name params)]
+   [server-url package-name function-name params]
+  (let [session-links (ocpu/object server-url package-name :R function-name params)]
     (nth (s/split (first session-links) #"/") 3)))
 
 (defn session-data [server-url session-key data-path output-format]
@@ -47,8 +48,21 @@
  The function returns directly the result which format is further detailed in the API documentation.
  This only works for functions, which return 'standart' types, such as vectors, lists, dataframes with numbers and strings in it.
  If the return value cannot be converted to json by OpenCPU, this function will fail."
-  (defn call-function-json-RPC
-  [base-url package-name function-name params]
-  (ocpu/object base-url package-name :R function-name params :json))
+(defn call-function-json-RPC
+  [server-url package-name function-name params]
+  (ocpu/object server-url package-name :R function-name params :json))
 
 
+(defn- get-data [server-url session variable output-format]
+  {(keyword variable) (session-data server-url session (format "R/%s" (name variable)) output-format)})
+
+
+(defn eval-R
+  "Evaluates arbitrary R expressions.
+  Important: They need to be self contained, as they run in an empty R session."
+  ([server-url r-code out-variables]
+  (eval-R server-url r-code out-variables :json))
+
+  ([server-url r-code out-variables output-format]
+  (let [session (call-function server-url "evaluate" "evaluate" {:input r-code})]
+    (reduce conj (map #(get-data server-url session % output-format) out-variables)))))

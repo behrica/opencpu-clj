@@ -1,5 +1,5 @@
 (ns opencpu-clj.core-test
-  (:require [midje.sweet :refer [fact facts]]
+  (:require [midje.sweet :refer [fact facts tabular]]
             [opencpu-clj.core :refer :all]
             [clojure.core.matrix :refer [shape]]
             [opencpu-clj.test-support :refer [server-url j]]))
@@ -29,3 +29,15 @@
         (call-function-json-RPC server-url "base" "seq" {:from 1 :to 10}) => (range 1 11))
   (fact "methjod 'seq' can be called non-RPC style"
         (call-function server-url "base" "seq" {:from 1 :to 10}) => #"x0.*"))
+
+(facts "can evaluate R code and get variables back"
+       (fact (eval-R server-url "a<-1" [:a] :csv) => {:a "\"x\"\r\n1\r\n"})
+       (fact (eval-R server-url "a<-1" [:a] :json) => {:a [1]})
+
+       (tabular "can evaluate R code and get variables back"
+         (fact (eval-R server-url ?code ?output) => ?expected)
+?code                         ?output      ?expected
+"a<-1;b<-c(1,2,3,4)"         [:a :b]          {:a [1] :b [1 2 3 4]}
+"a<-list(a=c(1,2),b=c(3,4))" [:a]             {:a {:a [1 2], :b [3 4]}}
+"a<-list(a=c(1,2),a=c(3,4))" [:a]             {:a {:a [1 2], :a.1 [3 4]}}))
+
