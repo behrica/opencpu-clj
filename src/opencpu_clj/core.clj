@@ -37,11 +37,12 @@
     (nth (s/split (first session-links) #"/") 3)))
 
 (defn session-data [server-url session-key data-path output-format]
+  "Access to the details of the session data"
   (ocpu/session server-url (format "/ocpu/tmp/%s/%s" session-key data-path) output-format))
 
 
 "Calls a function of an installed package on the OpenCPU server.
- The parameters to the metho a given as a map, which need to match the named parametesr of the
+ The parameters to the function are given as a map, which need to match the named parametesr of the
  R function to call. For details on parameter formats and mappings see the documentation.
  The function returns directly the result which format is further detailed in the API documentation.
  This only works for functions, which return 'standart' types, such as vectors, lists, dataframes with numbers and strings in it.
