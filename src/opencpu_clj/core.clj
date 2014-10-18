@@ -1,5 +1,5 @@
 (ns opencpu-clj.core
-  (:require [clojure.data.json :as json :refer[read-str]]
+  (:require [clojure.data.json :as json :refer[read-str write-str]]
             [clojure.string :as s]
             [clojure.core.matrix.dataset :as ds]
             [opencpu-clj.ocpu :as ocpu]))
@@ -26,7 +26,7 @@
   "Calls a function of an installed package on the OpenCPU server.
    The parameters to the metho a given as a map, which need to match the named parametesr of the
    R function to call. For details on parameter formats and mappings see the documentation.
-   The functions returns the links to the session data, whcih can be used to retrieve further information,
+   The functions returns the session key, which can be used to retrieve further information,
    such as the result of the function call. For details see the OpenCPU API documentation.
 
    Given that the parameters are correct, this call will always succeed, even if the result cannot eventually not be marshalled as Json.
@@ -57,6 +57,12 @@
   {(keyword variable) (session-data server-url session (format "R/%s" (name variable)) output-format)})
 
 
+(defn- params-to-R [input-variables]
+  (let [json-params (into {} (map #(hash-map (first %) (write-str (second %))) input-variables))
+        vars-declare-code (clojure.string/join (map #(format "%s<-fromJSON('%s');" (name (first %)) (second %)) json-params))
+         ]
+    (format "library(jsonlite);%s" vars-declare-code)))
+
 (defn eval-R
   "Evaluates arbitrary R expressions.
   Important: They need to be self contained, as they run in an empty R session."
@@ -64,5 +70,6 @@
   (eval-R server-url r-code input-variables out-variables :json))
 
   ([server-url r-code input-variables out-variables output-format]
-  (let [session (call-function server-url "evaluate" "evaluate" {:input r-code})]
-    (reduce conj (map #(get-data server-url session % output-format) out-variables)))))
+  (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
+         session (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})]
+    (into {} (map #(get-data server-url session % output-format) out-variables)))))

@@ -1,4 +1,4 @@
-(defproject opencpu-clj "0.0.1-SNAPSHOT"
+(defproject opencpu-clj "0.0.2-SNAPSHOT"
             :description "OpenCPU-clj is a Clojure library for using the OpenCPU API"
             :url "http://incanter.org/"
             :license {:name "Eclipse Public License"

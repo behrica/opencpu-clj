@@ -41,3 +41,10 @@
 "a<-list(a=c(1,2),b=c(3,4))" [:a]             {:a {:a [1 2], :b [3 4]}}
 "a<-list(a=c(1,2),a=c(3,4))" [:a]             {:a {:a [1 2], :a.1 [3 4]}}))
 
+(fact
+  "can pass simple value into eval-R"
+  (eval-R server-url "a<-seq(from,to)" {:from 1 :to 10} [:a] :json) => {:a [1 2 3 4 5 6 7 8 9 10]})
+
+(fact
+  "can pass simple int vector into eval-R"
+  (eval-R server-url "a<-length(v)" {:v [1 2 3 4 5] } [:a] :json) => {:a [5]})
