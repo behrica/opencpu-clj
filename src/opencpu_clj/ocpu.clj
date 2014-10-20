@@ -25,11 +25,11 @@
     ;(println body)
     ;(println "!!------------------------------------------------")
     (if (= 201 status)
-      (clojure.string/split-lines body) ;todo this is data transformation. Should be on higher level ?
-      body)))
+      {:body (clojure.string/split-lines body) :status status} ;todo this is data transformation. Should be on higher level ?
+      {:body body :status status})))
 
 (defn- get-body [url]
-  (:body (client/get url {:as :auto})))
+  (select-keys (client/get url {:as :auto}) [:body :status]))
 
 
 (defn object
@@ -71,3 +71,18 @@
   (get-body (format "%s/%s"
                   (make-package-url base-url package-name)
                   (clojure.string/join "/" (cons path (map name man-params))))))
+
+
+
+
+
+;!!------------------------------------------------
+(def server-url "http://public.opencpu.org")
+
+(object server-url "evaluate" :R "evaluate" {:input "xxxx"})
+
+
+
+
+
+

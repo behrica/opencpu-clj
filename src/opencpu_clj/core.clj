@@ -19,7 +19,7 @@
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It get return as a core.matric.dataset"
   [server-url package-name dataset-path]
-  (json-to-ds (ocpu/object server-url package-name :data dataset-path nil :json)))
+  {:body (json-to-ds (:body (ocpu/object server-url package-name :data dataset-path nil :json)))})
 
 
 (defn call-function
@@ -34,8 +34,8 @@
    But the session key can be used as a parameter to call other functions.
    "
    [server-url package-name function-name params]
-  (let [session-links (ocpu/object server-url package-name :R function-name params)]
-    (nth (s/split (first session-links) #"/") 3)))
+  (let [session-links (:body (ocpu/object server-url package-name :R function-name params))]
+    {:body (nth (s/split (first session-links) #"/") 3)}))
 
 (defn session-data [server-url session-key data-path output-format]
   "Access to the details of the session data"
@@ -54,7 +54,7 @@
 
 
 (defn- get-data [server-url session variable output-format]
-  {(keyword variable) (session-data server-url session (format "R/%s" (name variable)) output-format)})
+  {(keyword variable) (:body (session-data server-url session (format "R/%s" (name variable)) output-format))})
 
 
 (defn- params-to-R [input-variables]
@@ -71,5 +71,12 @@
 
   ([server-url r-code input-variables out-variables output-format]
   (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
-         session (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})]
+        session (:body (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced}))]
     (into {} (map #(get-data server-url session % output-format) out-variables)))))
+
+
+
+
+
+
+
