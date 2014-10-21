@@ -51,13 +51,13 @@
 (fact "can pass simple int vector into eval-R"
       (:result (eval-R server-url "a<-length(v)" {:v [1 2 3 4 5] } [:a] :json)) => {:a [5]})
 
-(fact "call functions returns error"
+(fact "can get error, if call functions returns error"
   (call-function server-url "evaluate" "blu"  {:input "zz"})  =>
       {:result "object 'blu' not found\n\nIn call:\nget(reqobject, paste(\"package\", reqpackage, sep = \":\"), inherits = FALSE)\n"
        :status 400}
       )
 
-(fact "Get error on eval-R"
+(fact "can get error on eval-R"
    (eval-R server-url "xxxx" {} [:a] :json) =>
       {:result "object 'xxxx' not found\n\nIn call:\nparse_all(input)\n", :status 400})
 
