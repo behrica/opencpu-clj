@@ -9,9 +9,7 @@
       (ds/dataset column-names json)))
 
 (defn- path-to-keyword [path]
-  (keyword (s/join "/" (drop 4 (s/split path #"/"))))
-
-  )
+  (keyword (s/join "/" (drop 4 (s/split path #"/")))))
 
 
 
@@ -19,7 +17,14 @@
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It get return as a core.matric.dataset"
   [server-url package-name dataset-path]
-  {:result (json-to-ds (:result (ocpu/object server-url package-name :data dataset-path nil :json)))})
+  (let [resp (ocpu/object server-url package-name :data dataset-path nil :json)
+         status (:status resp)
+    ]
+  (if (= 200 status)
+    {:result (json-to-ds (:result resp)) :status status }
+    resp
+    )
+  ))
 
 
 (defn call-function
@@ -34,8 +39,14 @@
    But the session key can be used as a parameter to call other functions.
    "
    [server-url package-name function-name params]
-  (let [session-links (:result (ocpu/object server-url package-name :R function-name params))]
-    {:result (nth (s/split (first session-links) #"/") 3)}))
+  (let [resp (ocpu/object server-url package-name :R function-name params)
+        result (:result resp)
+        status (:status resp)
+        ]
+    (if (= 201 (:status resp))
+      {:result (nth (s/split (first result) #"/") 3) :status status}
+      {:result result :status status}
+      )))
 
 (defn session-data [server-url session-key data-path output-format]
   "Access to the details of the session data"
@@ -71,9 +82,12 @@
 
   ([server-url r-code input-variables out-variables output-format]
   (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
-        session (:result (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced}))]
-    (into {} (map #(get-data server-url session % output-format) out-variables)))))
-
+        response (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})
+        ]
+    (if (= 201 (:status response))
+      {:result (into {} (map #(get-data server-url (:result response) % output-format) out-variables))}
+      response
+      ))))
 
 
 

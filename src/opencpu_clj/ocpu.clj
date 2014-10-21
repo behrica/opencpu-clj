@@ -29,7 +29,7 @@
       {:result body :status status})))
 
 (defn- get-body [url]
-  (let [resp (client/get url {:as :auto})]
+  (let [resp (client/get url {:as :auto :throw-exceptions false })]
    {:result (:body resp)
     :status (:status resp)
     }))
