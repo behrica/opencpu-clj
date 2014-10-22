@@ -9,10 +9,11 @@ For the current list of supported API methods see [here:] (doc/endpoints.md)
 
 
 The low-level package contains four methods, which match the names of teh API endpoints:
+
 - object
 - library
 - package
--session
+- session
 
 ### Accessing data from an R package
 
