@@ -8,6 +8,8 @@ The focus of this library will be to allow Clojure applications  to call arbitra
 For the current list of supported API methods see [here:] (doc/endpoints.md)
 
 
+### Low level API 
+
 The low-level package contains four methods, which match the names of teh API endpoints:
 
 - object
@@ -15,23 +17,12 @@ The low-level package contains four methods, which match the names of teh API en
 - package
 - session
 
-### Accessing data from an R package
 
-To access a dataset from inside an R package, the get-dataset method can be used like this.
-````Clojure
-(get-dataset "https://public.opencpu.org" "MASS" "Boston")
-````
-It returns a class of the type 'clojure.core.matrix.impl.dataset' which is used as well by Incanter.
-So all methods from Incanter, which take a dataset should work with it.
-
-### Calling R methods
-
-
-To call R, there are low-level methods (in ocpu.clj), which just call the OpenCPU endpoints
+#### Low-level general call of an R function
+To call R, there are low-level methods (in ocpu.clj), which just call the OpenCPU endpoints.
 They require parameter to be encoded in JSON or to be the keys coming from previous calls.
 The parameters must be named always.
 
-#### Low-level general call of an R function
 
 A general call to an R method looks like this:
 ````Clojure
@@ -79,7 +70,7 @@ An other example is some matrix calculations done in R:
 => {:values [14 3], :vectors [[0.8944 -0.1961] [0.4472 0.9806]]}
 ````
 
-### Parameter format for function calls
+#### Parameter format for function calls
 The parameter passed to the 'object' need to be in Json syntax.
 Specifically they need to be in a Json format which is understood by the R function jsonlite::fromJSON and get converted in the correct R type.
 So the "params" parameter of function 'object' is a mapr from Keywords to (Json-encoded) Strings, like
@@ -106,6 +97,24 @@ See here for further information: http://arxiv.org/pdf/1403.2805v1.pdf
 
 The return values for the R function calls via 'object' which requests "json" as output format, get encoded appropriately.
 So the function 'object' returns a Json encoded value following the upper encodings
+
+### High level API 
+
+#### Calling an R function
+
+#### Evaluating an R expression
+
+
+#### Accessing data from an R package
+
+To access a dataset from inside an R package, the get-dataset method can be used like this.
+````Clojure
+(get-dataset "https://public.opencpu.org" "MASS" "Boston")
+````
+It returns a class of the type 'clojure.core.matrix.impl.dataset' which is used as well by Incanter.
+So all methods from Incanter, which take a dataset should work with it.
+
+
 ## License
 
 Copyright © 2014 Carsten Behring
