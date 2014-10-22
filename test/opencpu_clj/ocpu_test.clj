@@ -11,10 +11,10 @@
 (fact "can call function as json which returns vector"
       (:result (object  server-url "base" :R  "seq" {:from 1 :to 5} :json)) => [1 2 3 4 5])
 
-(fact "can access data in package"
+(fact "can access data in package as plain"
       (:result (object server-url "MASS" :data "Boston")) => #"        crim    zn indus chas    nox    rm   age     dis rad tax ptratio  black\n.*")
 
-(fact "can access data in package as json"
+(fact "can access data in package as csv"
       (:result (object server-url "MASS" :data "Boston" nil :csv)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
 
 
@@ -51,4 +51,6 @@
 (fact "can get info on a package"
       (:result (library server-url "jsonlite")) => (contains "\n\t\tInformation on package 'jsonlite'"))
 
+
+(object server-url "base" :R "identity" {:x "list(\"1\",2,3,4)" } :json)
 
