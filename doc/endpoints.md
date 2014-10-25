@@ -6,11 +6,11 @@ The "supported = yes" in this table means, that there is a method to access the 
 endpoint | supported | description
 ----------|-----------|------------
 /ocpu/library/{pkgname}/ |yes	|R packages installed in one of the global libraries on the server.
-/ocpu/user/{username}/library/{pkgname}/||	R packages installed in the home library of Linux user {username}.
+/ocpu/user/{username}/library/{pkgname}/|yes|	R packages installed in the home library of Linux user {username}.
 /ocpu/tmp/{key}/|yes|	Temporary sessions, which hold outputs from a function/script RPC.
-/ocpu/cran/{pkgname}/||	Interfaces to the R package {pkgname} that is current on CRAN.
-/ocpu/bioc/{pkgname}/||	Interfaces to the R package {pkgname} that is current on BioConductor.
-/ocpu/github/{gituser}/{pkgname}/||	Interfaces to R package {pkgname} in the master branch of the identically named repository from github user {gituser}.
+/ocpu/cran/{pkgname}/|yes|	Interfaces to the R package {pkgname} that is current on CRAN.
+/ocpu/bioc/{pkgname}/|yes|	Interfaces to the R package {pkgname} that is current on BioConductor.
+/ocpu/github/{gituser}/{pkgname}/|yes|	Interfaces to R package {pkgname} in the master branch of the identically named repository from github user {gituser}.
 /ocpu/gist/{gituser}/{path}	||Static files and directories located in the gist repository from github user gituser. This API does not support packages, just files (scripts, html, etc)
 
 
