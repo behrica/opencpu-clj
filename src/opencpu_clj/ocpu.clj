@@ -68,7 +68,7 @@
    session-path : The path to the session object, as returned from the 'object' function.
 
    Returns a map with keys :result and :status , containing the result of the call or an error message.
-   The value of :status is teh http status code."
+   The value of :status is the http status code."
   [base-url session-path output-format]
   (get-body (format "%s/%s/%s" base-url session-path (name output-format))))
 
@@ -81,7 +81,7 @@
              {:type :user :user-name 'jeroen'} for accessing R package of a user
 
    Returns a map with keys :result and :status , containing the result of the call or an error message.
-   The value of :status is teh http status code."
+   The value of :status is the http status code."
   ([base-url]
   (get-body (format "%s/ocpu/library" base-url)))
 
