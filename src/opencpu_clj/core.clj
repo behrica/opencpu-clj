@@ -17,14 +17,13 @@
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It get return as a core.matric.dataset"
   [server-url package-name dataset-path]
-  (let [resp (ocpu/object server-url package-name :data dataset-path nil :json)
+  (let [resp (ocpu/object server-url :library package-name :data dataset-path nil :json)
          status (:status resp)
     ]
   (if (= 200 status)
     {:result (json-to-ds (:result resp)) :status status }
     resp
-    )
-  ))
+    )))
 
 
 (defn call-function
@@ -39,7 +38,7 @@
    But the session key can be used as a parameter to call other functions.
    "
    [server-url package-name function-name params]
-  (let [resp (ocpu/object server-url package-name :R function-name params)
+  (let [resp (ocpu/object server-url :library package-name :R function-name params)
         result (:result resp)
         status (:status resp)
         ]
@@ -61,7 +60,7 @@
  If the return value cannot be converted to json by OpenCPU, this function will fail."
 (defn call-function-json-RPC
   [server-url package-name function-name params]
-  (ocpu/object server-url package-name :R function-name params :json))
+  (ocpu/object server-url :library package-name :R function-name params :json))
 
 
 (defn- get-data [server-url session variable output-format]

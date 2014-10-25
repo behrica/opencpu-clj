@@ -5,10 +5,10 @@
              [opencpu-clj.test-support :refer [server-url j]]))
 
 
- (fact "Can retrieve datasets"
+(fact "Can retrieve datasets"
        (shape (:result (get-dataset server-url "MASS" "Boston"))) => [506 14])
 
-  (fact "Can get error on retrieve non existing datasets"
+(fact "Can get error on retrieve non existing datasets"
        (get-dataset server-url "MASS" "xxx")=> {:result "data set 'xxx' not found\n" :status 400 })
 
 
@@ -60,4 +60,3 @@
 (fact "can get error on eval-R"
    (eval-R server-url "xxxx" {} [:a] :json) =>
       {:result "object 'xxxx' not found\n\nIn call:\nparse_all(input)\n", :status 400})
-

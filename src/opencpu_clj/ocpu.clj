@@ -5,13 +5,13 @@
 ; The methods in here should be only thin wrappers arround the http API and do not convert input and ouput data,
 ; but transfer data as-is.
 
-(defn- make-package-url [base-url package-name]
-  (format "%s/ocpu/library/%s" base-url package-name))
+(defn- make-package-url [base-url library-name package-name]
+  (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
 
 
-(defn- do-post [base-url package-name function-name output-format params]
+(defn- do-post [base-url library-name package-name function-name output-format params]
 
-  (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url package-name) function-name (name output-format))
+  (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format))
                               {:form-params params
                                :throw-exceptions false
                                ;:debug-body true
@@ -21,7 +21,7 @@
         body (:body response)
         ]
     ;(println "!!------------------------------------------------")
-    ;(println body)
+    ;(println body
     ;(println "!!------------------------------------------------")
     (if (= 201 status)
       {:result (clojure.string/split-lines body) :status status} ;todo this is data transformation. Should be on higher level ?
@@ -37,7 +37,8 @@
 
 (defn object
   "Does a call to the OpenCPU 'object' endpoint.
-   base-url : url and port of the OpencPU server
+  base-url : url and port of the OpencPU server
+  library-name : :library or :cran
    package-name : name of system wide installed R package to use
    object-type : :R or :Data to acces R-functions or data
    object-name : name of the function or data object
@@ -47,16 +48,16 @@
    output-format : can be a keyword for choosing any of teh valid output-formats (see OpenCPU docu)
 
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
-   The value of :status is teh http status code. "
-  ([base-url package-name object-type object-name]
-   (object base-url package-name object-type object-name nil))
-  ([base-url package-name object-type object-name params]
-  (object base-url package-name object-type object-name params ""))
-  ([base-url package-name object-type object-name params output-format]
+   The value of :status is the http status code. "
+  ([base-url library-name package-name object-type object-name]
+   (object base-url library-name package-name object-type object-name nil))
+  ([base-url library-name package-name object-type object-name params]
+  (object base-url library-name package-name object-type object-name params ""))
+  ([base-url library-name package-name object-type object-name params output-format]
 
    (if params
-     (do-post base-url package-name object-name  output-format params)
-     (get-body (format "%s/%s/%s/%s" (make-package-url base-url package-name)
+     (do-post base-url library-name package-name object-name output-format params)
+     (get-body (format "%s/%s/%s/%s" (make-package-url base-url library-name package-name)
                                      (name object-type)
                                       object-name
                                      (name output-format))))))
@@ -107,5 +108,5 @@
    The value of :status is the http status code."
   [base-url package-name path & man-params]
   (get-body (format "%s/%s"
-                  (make-package-url base-url package-name)
+                  (make-package-url base-url :library package-name)
                   (clojure.string/join "/" (cons path (map name man-params))))))
