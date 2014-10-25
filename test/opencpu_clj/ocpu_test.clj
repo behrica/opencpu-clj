@@ -52,5 +52,4 @@
       (:result (library server-url "jsonlite")) => (contains "\n\t\tInformation on package 'jsonlite'"))
 
 
-(object server-url "base" :R "identity" {:x "list(\"1\",2,3,4)" } :json)
 

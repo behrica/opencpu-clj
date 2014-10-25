@@ -88,9 +88,3 @@
       {:result (into {} (map #(get-data server-url (:result response) % output-format) out-variables))}
       response
       ))))
-
-
-
-
-
-

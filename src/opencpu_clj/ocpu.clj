@@ -1,10 +1,9 @@
 (ns opencpu-clj.ocpu
   (:require [clj-http.client :as client]))
 
-
 ; Low level interface to the OpenCPU HTTP Api.
 ; The methods in here should be only thin wrappers arround the http API and do not convert input and ouput data,
-; but transfer as is.
+; but transfer data as-is.
 
 (defn- make-package-url [base-url package-name]
   (format "%s/ocpu/library/%s" base-url package-name))
@@ -48,9 +47,7 @@
    output-format : can be a keyword for choosing any of teh valid output-formats (see OpenCPU docu)
 
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
-   The value of :status is teh http status code.
-
-  "
+   The value of :status is teh http status code. "
   ([base-url package-name object-type object-name]
    (object base-url package-name object-type object-name nil))
   ([base-url package-name object-type object-name params]
@@ -71,8 +68,7 @@
    session-path : The path to the session object, as returned from the 'object' function.
 
    Returns a map with keys :result and :status , containing the result of the call or an error message.
-   The value of :status is teh http status code.
-   "
+   The value of :status is teh http status code."
   [base-url session-path output-format]
   (get-body (format "%s/%s/%s" base-url session-path (name output-format))))
 
@@ -85,9 +81,7 @@
              {:type :user :user-name 'jeroen'} for accessing R package of a user
 
    Returns a map with keys :result and :status , containing the result of the call or an error message.
-   The value of :status is teh http status code.
-
-   "
+   The value of :status is teh http status code."
   ([base-url]
   (get-body (format "%s/ocpu/library" base-url)))
 
