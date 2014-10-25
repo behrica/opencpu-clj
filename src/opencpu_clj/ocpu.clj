@@ -6,7 +6,7 @@
 ; but transfer data as-is.
 
 (defn- make-package-url [base-url library-name package-name]
-  (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
+    (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
 
 
 (defn- do-post [base-url library-name package-name function-name output-format params]
@@ -14,8 +14,8 @@
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format))
                               {:form-params params
                                :throw-exceptions false
-                               ;:debug-body true
-                               ;:debug true
+ ;                              :debug-body true
+ ;                              :debug true
                                :as :auto})
         status (:status response)
         body (:body response)
@@ -28,8 +28,9 @@
       {:result body :status status})))
 
 (defn- get-body [url]
+;  (println url)
   (let [resp (client/get url {:as :auto :throw-exceptions false })]
-   {:result (:body resp)
+    {:result (:body resp)
     :status (:status resp)
     }))
 
@@ -57,10 +58,10 @@
 
    (if params
      (do-post base-url library-name package-name object-name output-format params)
-     (get-body (format "%s/%s/%s/%s" (make-package-url base-url library-name package-name)
-                                     (name object-type)
-                                      object-name
-                                     (name output-format))))))
+     (get-body (clojure.string/join "/" (filter #(not (nil? %)) (vector  (make-package-url base-url library-name package-name)
+                                                                         (name object-type)
+                                                                         object-name
+                                                                         (name output-format))))))))
 
 
 (defn session

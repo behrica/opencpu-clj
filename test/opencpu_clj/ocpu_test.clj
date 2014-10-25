@@ -1,5 +1,5 @@
 (ns opencpu-clj.ocpu-test
-  (:require [midje.sweet :refer [fact facts n-of anything contains]]
+  (:require [midje.sweet :refer [fact facts n-of anything contains has-prefix]]
             [opencpu-clj.ocpu :refer [object session package library]]
             [opencpu-clj.test-support :refer [server-url j]]))
 
@@ -22,6 +22,10 @@
 
 (fact "can call method from github package"
       (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json)) => [-10])
+
+(fact "can list R objects from bioconductor package"
+      (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
+
 
 (fact "can access session path as json"
       (let [first-key-path (first (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})))]

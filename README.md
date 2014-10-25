@@ -26,7 +26,7 @@ The parameters must be named always.
 
 A general call to an R method looks like this:
 ````Clojure
-(object "http://public.opencpu.org" "stats" :R "rnorm" {:n 10})
+(object "http://public.opencpu.org" :library "stats" :R "rnorm" {:n 10})
 => {:result ["/ocpu/tmp/x047c97a725/R/.val" "/ocpu/tmp/x047c97a725/stdout" "/ocpu/tmp/x047c97a725/source" "/ocpu/tmp/x047c97a725/console" "/ocpu/tmp/x047c97a725/info" "/ocpu/tmp/x047c97a725/files/DESCRIPTION"], :status 201}
 1f6261fc3/info" "/ocpu/tmp/x01f6261fc3/files/DESCRIPTION"]
 (session "http://public.opencpu.org" "/ocpu/tmp/x047c97a725/R/.val" :json )
@@ -59,7 +59,7 @@ So in contrary to the "general" style, which always succeeds (given the paramete
  the Json style might fail to marshall the result back from the server.
 
 ````Clojure
-(object "http://public.opencpu.org" "base" :R "seq" {:from 1 :to 5} :json)
+(object "http://public.opencpu.org" :library "base" :R "seq" {:from 1 :to 5} :json)
 =>{:result (1 2 3 4 5), :status 200}
 ````
 
@@ -67,7 +67,7 @@ An other example is some matrix calculations done in R:
 
 ````Clojure
 (def m (m/matrix [[13 2][5 4]]))
-(object "http://public.opencpu.org" "base" :R "eigen" {:x (json/write-str m)} :json)
+(object "http://public.opencpu.org" :library "base" :R "eigen" {:x (json/write-str m)} :json)
 => {:result {:values [14 3], :vectors [[0.8944 -0.1961] [0.4472 0.9806]]}, :status 200}
 ````
 
