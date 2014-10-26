@@ -64,5 +64,5 @@
 
 
 (fact "can work woth data sets on server"
-      (let [session-key-spam (:result (call-function "http://public.opencpu.org" "base" "identity" {:x "data(spam,package=\"kernlab\");spam"}))]
-        (:result (call-function-json-RPC "http://public.opencpu.org" "base" "dim" {:x session-key-spam}))) => [4601,58])
+      (let [session-key-spam (:result (call-function server-url "base" "identity" {:x "data(spam,package=\"kernlab\");spam"}))]
+        (:result (call-function-json-RPC server-url "base" "dim" {:x session-key-spam}))) => [4601,58])

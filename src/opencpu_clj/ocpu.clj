@@ -46,7 +46,7 @@
    params : map of params to the R function to be called. Need to be a map where each key will be used to set
             a named argument in the R function call. The values need to be encoded in Json in a format which the R function
             jsonlite::fromJSON is able to convert to the correct R type. If not nil this will do a http POST, else a http GET.
-   output-format : can be a keyword for choosing any of teh valid output-formats (see OpenCPU docu)
+   output-format : can be a keyword for choosing any of the valid output-formats (see OpenCPU docu)
 
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
    The value of :status is the http status code. "
