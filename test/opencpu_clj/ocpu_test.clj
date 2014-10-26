@@ -35,6 +35,10 @@
       (let [first-key-path (first (:result (object server-url :library "base" :R "data.frame"  {:gender "c(\"M\",\"M\",\"F\")" :ht "c(172,186.5,165)" :wt "c(91,99,74)"})))]
          (:result (session server-url first-key-path :json)) => [{:ht 172, :wt 91, :gender "M"} {:ht 186.5, :wt 99, :gender "M"} {:ht 165, :wt 74, :gender "F"}]))
 
+(fact "can get data frames as clojure map"
+      (count  (:result  (object server-url :library "base" :R "identity" {:x "mtcars"} :json))) => 32)
+
+
 (fact "can get info of a package"
       (:result (package server-url "base" "info" )) => #"\n\t\tInformation on package 'base'.*")
 
@@ -49,7 +53,6 @@
 
 (fact "can get list of R objects from package"
       (:result (package server-url "MASS" "R" )) => #"abbey\n.*")
-
 
 (fact "can get info on user package"
       (:result (library "http://public.opencpu.org" {:type :user :user-name "jeroen"} "jsonlite")) => (contains "Information on package 'jsonlite'"))

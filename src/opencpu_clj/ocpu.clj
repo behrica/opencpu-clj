@@ -49,7 +49,11 @@
    output-format : can be a keyword for choosing any of the valid output-formats (see OpenCPU docu)
 
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
-   The value of :status is the http status code. "
+  The value of :status is the http status code. The :result can either be
+  - a list of session links (for a function call, if :json was not specified)
+  - a clojure data structure (for a function call and :json was specified and return was a simple value which http-client cou auto-coerce from json)
+  - a string in the output format asked for (:json, :csv, ..)
+  "
   ([base-url library-name package-name object-type object-name]
    (object base-url library-name package-name object-type object-name nil))
   ([base-url library-name package-name object-type object-name params]
