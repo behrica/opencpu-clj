@@ -18,7 +18,7 @@
       (:result (object server-url :library "MASS" :data "Boston" nil :csv)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
 
 (fact "can call method from package on cran"
-      (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json)) => [10])
+     (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json)) => [10])
 
 (fact "can call method from github package"
       (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json)) => [-10])
@@ -37,7 +37,6 @@
 
 (fact "can get data frames as clojure map"
       (count  (:result  (object server-url :library "base" :R "identity" {:x "mtcars"} :json))) => 32)
-
 
 (fact "can get info of a package"
       (:result (package server-url "base" "info" )) => #"\n\t\tInformation on package 'base'.*")

@@ -20,9 +20,9 @@
         status (:status response)
         body (:body response)
         ]
-    ;(println "!!------------------------------------------------")
-    ;(println body
-    ;(println "!!------------------------------------------------")
+;    (println "!!------------------------------------------------")
+;    (println body)
+;    (println "!!------------------------------------------------")
     (if (= 201 status)
       {:result (clojure.string/split-lines body) :status status} ;todo this is data transformation. Should be on higher level ?
       {:result body :status status})))
@@ -33,8 +33,6 @@
     {:result (:body resp)
     :status (:status resp)
     }))
-
-
 
 (defn object
   "Does a call to the OpenCPU 'object' endpoint.
@@ -92,14 +90,15 @@
   (get-body (format "%s/ocpu/library" base-url)))
 
   ([base-url package-name]
-   (get-body (format "%s/ocpu/library/%s" base-url package-name)))
+   (get-body (make-package-url base-url :library package-name)))
 
   ([base-url package-location-info package-name]
-  (get-body (format "%s/ocpu/%s/%s/library/%s"
-                             base-url
-                             (name (:type package-location-info))
-                             (name (:user-name package-location-info))
-                             package-name))))
+    (get-body (make-package-url
+                base-url
+                (format "%s/%s/library"
+                        (name (:type package-location-info))
+                        (name (:user-name package-location-info)))
+                package-name))))
 
 
 (defn package

@@ -1,6 +1,6 @@
 (defproject opencpu-clj "0.1.0-SNAPSHOT"
             :description "OpenCPU-clj is a Clojure library for using the OpenCPU API"
-            :url "http://incanter.org/"
+            :url "https://github.com/behrica/opencpu-clj"
             :license {:name "Eclipse Public License"
                       :url  "http://www.eclipse.org/legal/epl-v10.html"}
             :min-lein-version "2.0.0"
