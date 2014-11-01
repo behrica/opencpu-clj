@@ -27,6 +27,10 @@
       (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
 
 
+(fact "Json RPC to method return class lm fails"
+      (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json) => {:result "No method asJSON S3 class: lm\n", :status 400})
+
+
 (fact "can access session path as json"
       (let [first-key-path (first (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})))]
         (:result (session server-url first-key-path :json)) => [1 2 3 4 5]))

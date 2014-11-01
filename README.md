@@ -4,11 +4,18 @@ A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clo
 
 ## Usage
 
-The focus of this library will be to allow Clojure applications  to call arbitrary R functions and access data from R packages.
+The purpose of this library is to allow Clojure applications to call arbitrary R functions and access data from R packages via a remote opencpu server
 For the current list of supported API methods see [here:] (doc/endpoints.md)
 
+To use this library, just add
 
-### Low level API 
+````Clojure
+[clj-opencpu "0.1.0"]
+````
+to you project.clj
+
+
+### Low level API
 
 The low-level package contains four methods, which match the names of teh API endpoints:
 
@@ -34,7 +41,7 @@ A general call to an R method looks like this:
 ````
 This calls the R function "rnorm" from package "stats" with parameter (n=10) on the OpenCPU server at url "http://public.opencpu.org".
 
-It returns a session key. (In the form of a list of session key links)
+It returns a session key. (In the form of a list of session key links).
 Further data of the call result can be obtained by accessing the different links via the "session" method.
 
 These links give access to different data from the call, like:
@@ -58,10 +65,20 @@ Attention: This is not possible to do with all R functions. Most function result
 So in contrary to the "general" style, which always succeeds (given the parameter are ok, so R can do the call successfully),
  the Json style might fail to marshall the result back from the server.
 
+So the following will work, because the "seq" function returns a vector of numeric type, which can be marshalled to Json by R and unnmarshelled by Clojure.
+
 ````Clojure
 (object "http://public.opencpu.org" :library "base" :R "seq" {:from 1 :to 5} :json)
 =>{:result (1 2 3 4 5), :status 200}
 ````
+
+To call the "lm" method like this, will fail, as it returns the R class "lm", which cannot be marshalled to Json by the JSONlite library used by the opencpu server.
+````Clojure
+(object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json)
+=> {:result "No method asJSON S3 class: lm\n", :status 400}
+````
+So this method can only be called without :json. And the resulting session objects can then be used as parameters in further calls.
+
 
 An other example is some matrix calculations done in R:
 
@@ -107,7 +124,7 @@ See here for further information: http://arxiv.org/pdf/1403.2805v1.pdf
 The return values for the R function calls via 'object' which requests "json" as output format, get encoded appropriately.
 So the function 'object' returns a Json encoded value following the upper encodings
 
-### High level API 
+### High level API
 
 #### Calling an R function
 
