@@ -99,7 +99,7 @@ See the tests in ocpu_test.clj for examples.
 
 ##### Json Syntax
 Json encoded parameters need to be in a Json format which is understood by the R function jsonlite::fromJSON and get converted in the correct R type.
-So the "params" parameter of function 'object' is a mapr from Keywords to (Json-encoded) Strings, like
+So the "params" parameter of function 'object' is a map from Keywords to (Json-encoded) Strings, like
 
 ````Clojure
 {:a 10   b: [1 2 3 4 5]   c: "[\"a\",\"b\",\"c\"]}
