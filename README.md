@@ -4,8 +4,8 @@ A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clo
 
 ## Usage
 
-The purpose of this library is to allow Clojure applications to call arbitrary R functions and access data from R packages via a remote opencpu server
-For the current list of supported API methods see [here:] (doc/endpoints.md)
+The purpose of this library is to allow Clojure applications to call arbitrary R functions and access data from R packages via a remote opencpu server.
+For the current list of supported API methods see [here] (doc/endpoints.md)
 
 To use this library, just add
 
@@ -17,7 +17,7 @@ to you project.clj
 
 ### Low level API
 
-The low-level package contains four methods, which match the names of teh API endpoints:
+The low-level package contains four methods, which match the names of the API endpoints:
 
 - object
 - library
