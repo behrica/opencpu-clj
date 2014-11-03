@@ -26,10 +26,20 @@
 (fact "can list R objects from bioconductor package"
       (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
 
-
 (fact "Json RPC to method return class lm fails"
       (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json) => {:result "No method asJSON S3 class: lm\n", :status 400})
 
+(fact "can upload a file"
+      (last  (:result  (object server-url :library "utils" :R "read.csv" {:skip (j 1) :file {:file "resources/test.csv"}}))) => (contains "test.csv"))
+
+(fact "can upload an other file"
+      (last  (:result  (object server-url :library "utils" :R "read.csv" {:file {:file "resources/test2.csv"}}))) => (contains "test2.csv"))
+
+(fact "can upload file with an other parameter"
+      (last  (:result  (object server-url :library "base" :R "file" {:description {:file "resources/test.csv"}}))) (contains "test.csv") )
+
+(fact "uses other param in file upload"
+      (:result  (object server-url :library "base" :R "file" {:blub "1"  :description {:file "resources/test.csv"}})) => (contains "blub")  )
 
 (fact "can access session path as json"
       (let [first-key-path (first (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})))]

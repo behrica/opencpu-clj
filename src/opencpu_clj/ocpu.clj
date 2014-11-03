@@ -1,5 +1,6 @@
 (ns opencpu-clj.ocpu
-  (:require [clj-http.client :as client]))
+  (:require [clj-http.client :as client]
+            [opencpu-clj.utils :refer [params-map]]))
 
 ; Low level interface to the OpenCPU HTTP Api.
 ; The methods in here should be only thin wrappers arround the http API and do not convert input and ouput data,
@@ -8,19 +9,17 @@
 (defn- make-package-url [base-url library-name package-name]
     (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
 
-
 (defn- do-post [base-url library-name package-name function-name output-format params]
-
   (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format))
-                              {:form-params params
-                               :throw-exceptions false
- ;                              :debug-body true
- ;                              :debug true
-                               :as :auto})
+                              (merge (params-map params)
+                                     {:throw-exceptions false
+                                   ;                                   :debug-body true
+                                   ;                                   :debug true
+                                      :as :auto}))
         status (:status response)
         body (:body response)
         ]
-;    (println "!!------------------------------------------------")
+;    (Println "!!------------------------------------------------")
 ;    (println body)
 ;    (println "!!------------------------------------------------")
     (if (= 201 status)
@@ -44,6 +43,8 @@
    params : map of params to the R function to be called. Need to be a map where each key will be used to set
             a named argument in the R function call. The values need to be encoded in Json in a format which the R function
             jsonlite::fromJSON is able to convert to the correct R type. If not nil this will do a http POST, else a http GET.
+            For the special case of file uploads, the parameter value can be a map like this: {:file filename}
+
    output-format : can be a keyword for choosing any of the valid output-formats (see OpenCPU docu)
 
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
