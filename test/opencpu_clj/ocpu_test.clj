@@ -75,3 +75,7 @@
 
 (fact "can get info on a package"
       (:result (library server-url "jsonlite")) => (contains "\n\t\tInformation on package 'jsonlite'"))
+
+
+(fact "can execute R gist file"
+      (:result  (object server-url :gist "behrica" "6f9e20e30387038ad0a6" "gistfile1.r")) => (n-of anything 5))

@@ -12,18 +12,15 @@
   (keyword (s/join "/" (drop 4 (s/split path #"/")))))
 
 
-
 (defn get-dataset
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
-  It get return as a core.matric.dataset"
+  It gets returned as a core.matrix.dataset"
   [server-url package-name dataset-path]
   (let [resp (ocpu/object server-url :library package-name :data dataset-path nil :json)
-         status (:status resp)
-    ]
+         status (:status resp)]
   (if (= 200 status)
     {:result (json-to-ds (:result resp)) :status status }
-    resp
-    )))
+    resp )))
 
 
 (defn call-function
@@ -40,12 +37,10 @@
    [server-url package-name function-name params]
   (let [resp (ocpu/object server-url :library package-name :R function-name params)
         result (:result resp)
-        status (:status resp)
-        ]
+        status (:status resp)]
     (if (= 201 (:status resp))
       {:result (nth (s/split (first result) #"/") 3) :status status}
-      {:result result :status status}
-      )))
+      {:result result :status status})))
 
 (defn session-data [server-url session-key data-path output-format]
   "Access to the details of the session data"
@@ -69,8 +64,7 @@
 
 (defn- params-to-R [input-variables]
   (let [json-params (into {} (map #(hash-map (first %) (write-str (second %))) input-variables))
-        vars-declare-code (clojure.string/join (map #(format "%s<-fromJSON('%s');" (name (first %)) (second %)) json-params))
-         ]
+        vars-declare-code (clojure.string/join (map #(format "%s<-fromJSON('%s');" (name (first %)) (second %)) json-params))]
     (format "library(jsonlite);%s" vars-declare-code)))
 
 (defn eval-R
@@ -81,9 +75,7 @@
 
   ([server-url r-code input-variables out-variables output-format]
   (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
-        response (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})
-        ]
+        response (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})]
     (if (= 201 (:status response))
       {:result (into {} (map #(get-data server-url (:result response) % output-format) out-variables))}
-      response
-      ))))
+      response))))

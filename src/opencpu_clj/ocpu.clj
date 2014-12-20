@@ -9,12 +9,15 @@
 (defn- make-package-url [base-url library-name package-name]
     (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
 
-(defn- do-post [base-url library-name package-name function-name output-format params]
-  (let [response (client/post (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format))
-                              (merge (params-map params)
+
+(defn- make-post-R-url [base-url library-name package-name function-name output-format]
+  (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format)))
+
+(defn- do-post [url params]
+  (let [response (client/post url (merge (params-map params)
                                      {:throw-exceptions false
-                                   ;                                   :debug-body true
-                                   ;                                   :debug true
+                                      ;:debug-body true
+                                      ;:debug true
                                       :as :auto}))
         status (:status response)
         body (:body response)
@@ -47,21 +50,26 @@
 
    output-format : can be a keyword for choosing any of the valid output-formats (see OpenCPU docu)
 
+  If library-name is :gist, then the following paramters get's interpreted as 'gist-username', 'gist', 'filename'
+  and the gist file gets executed (no parameter passing possible)
+
    Returns a map with keys :result and :status , containing the result in output-format of the call or an error message.
   The value of :status is the http status code. The :result can either be
   - a list of session links (for a function call, if :json was not specified)
   - a clojure data structure (for a function call and :json was specified and return was a simple value which http-client cou auto-coerce from json)
   - a string in the output format asked for (:json, :csv, ..)
   "
+
   ([base-url library-name package-name object-type object-name]
    (object base-url library-name package-name object-type object-name nil))
   ([base-url library-name package-name object-type object-name params]
   (object base-url library-name package-name object-type object-name params ""))
   ([base-url library-name package-name object-type object-name params output-format]
 
-   (if params
-     (do-post base-url library-name package-name object-name output-format params)
-     (get-body (clojure.string/join "/" (filter #(not (nil? %)) (vector  (make-package-url base-url library-name package-name)
+     (cond
+      (= library-name :gist) (do-post (clojure.string/join "/" [base-url "ocpu" "gist" package-name object-type object-name]) {} )
+      params (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
+      :else (get-body (clojure.string/join "/" (filter #(not (nil? %)) (vector  (make-package-url base-url library-name package-name)
                                                                          (name object-type)
                                                                          object-name
                                                                          (name output-format))))))))
