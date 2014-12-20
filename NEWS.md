@@ -1,7 +1,8 @@
  Unreleased Version:
 
-- implement file upload(#4)
-
+- implemented file upload(#4)
+- implemented gist support(#2)
+- implemented script execution(#6)
 
 Version 0.1:
 

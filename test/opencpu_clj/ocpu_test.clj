@@ -79,3 +79,10 @@
 
 (fact "can execute R gist file"
       (:result  (object server-url :gist "behrica" "6f9e20e30387038ad0a6" "gistfile1.r")) => (n-of anything 5))
+
+
+(fact "can execute R script in package of library"
+      (:result  (object server-url :script "library" "MASS" "scripts/ch01.R")) => (n-of anything 13))
+
+(fact "can execute Rmd script in package of library"
+      (:result  (object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")(object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")) => (n-of anything 12))

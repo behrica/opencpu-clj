@@ -68,6 +68,7 @@
 
      (cond
       (= library-name :gist) (do-post (clojure.string/join "/" [base-url "ocpu" "gist" package-name object-type object-name]) {} )
+      (= library-name :script) (do-post (clojure.string/join "/" [base-url "ocpu" package-name object-type object-name]) {} )
       params (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
       :else (get-body (clojure.string/join "/" (filter #(not (nil? %)) (vector  (make-package-url base-url library-name package-name)
                                                                          (name object-type)

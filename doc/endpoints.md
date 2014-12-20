@@ -11,7 +11,7 @@ endpoint | supported | description
 /ocpu/cran/{pkgname}/|yes|	Interfaces to the R package {pkgname} that is current on CRAN.
 /ocpu/bioc/{pkgname}/|yes|	Interfaces to the R package {pkgname} that is current on BioConductor.
 /ocpu/github/{gituser}/{pkgname}/|yes|	Interfaces to R package {pkgname} in the master branch of the identically named repository from github user {gituser}.
-/ocpu/gist/{gituser}/{path}	||Static files and directories located in the gist repository from github user gituser. This API does not support packages, just files (scripts, html, etc)
+/ocpu/gist/{gituser}/{path}	|yes|Static files and directories located in the gist repository from github user gituser. This API does not support packages, just files (scripts, html, etc)
 
 
 ## The R package API
