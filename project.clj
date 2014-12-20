@@ -8,4 +8,19 @@
                             [org.clojure/clojure "1.6.0"]
                             [org.clojure/data.json "0.2.5"]
                             [clj-http "1.0.0"]]
-            :profiles {:dev {:dependencies [[midje "1.6.3"]]}})
+            :plugins [[lein-midje-doc "0.0.24"]]
+            :profiles {:dev {:dependencies [[midje "1.6.3"]]}}
+            :documentation
+            {:files
+             {"ocpu_test"
+              {:input "test/opencpu_clj/ocpu_test.clj"
+               :title "clj-opencpu/ocpu_text "
+               :sub-title "clojure client for opencpu.org"
+               :author "Carsten Behring"
+               :email  "carsten.behring@gmail.com"}
+              "core_test"
+              {:input "test/opencpu_clj/core_test.clj"
+               :title "clj-opencpu/core_test"
+               :sub-title "clojure client for opencpu.org"
+               :author "Carsten Behring"
+               :email  "carsten.behring@gmail.com"}}})
