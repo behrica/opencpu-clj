@@ -9,25 +9,25 @@
       (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})) => (n-of anything 6))
 
 (fact "can call function as json which returns vector"
-      (:result (object  server-url :library "base" :R  "seq" {:from 1 :to 5} :json)) => [1 2 3 4 5])
+      (:result (object  server-url :library "base" :R  "seq" {:from 1 :to 5} :json nil)) => [1 2 3 4 5])
 
 (fact "can access data in package as plain"
       (:result (object server-url :library "MASS" :data "Boston")) => #"        crim    zn indus chas    nox    rm   age     dis rad tax ptratio  black\n.*")
 
 (fact "can access data in package as csv"
-      (:result (object server-url :library "MASS" :data "Boston" nil :csv)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
+      (:result (object server-url :library "MASS" :data "Boston" nil :csv nil)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
 
 (fact "can call method from package on cran"
-     (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json)) => [10])
+      (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json nil)) => [10])
 
 (fact "can call method from github package"
-      (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json)) => [-10])
+      (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json nil)) => [-10])
 
 (fact "can list R objects from bioconductor package"
       (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
 
 (fact "Json RPC to method return class lm fails"
-      (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json) => {:result "No method asJSON S3 class: lm\n", :status 400})
+      (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json nil) => {:result "No method asJSON S3 class: lm\n", :status 400})
 
 (fact "can upload a file"
       (last  (:result  (object server-url :library "utils" :R "read.csv" {:skip (j 1) :file {:file "resources/test.csv"}}))) => (contains "test.csv"))
@@ -50,7 +50,7 @@
          (:result (session server-url first-key-path :json)) => [{:ht 172, :wt 91, :gender "M"} {:ht 186.5, :wt 99, :gender "M"} {:ht 165, :wt 74, :gender "F"}]))
 
 (fact "can get data frames as clojure map"
-      (count  (:result  (object server-url :library "base" :R "identity" {:x "mtcars"} :json))) => 32)
+      (count  (:result  (object server-url :library "base" :R "identity" {:x "mtcars"} :json nil))) => 32)
 
 (fact "can get info of a package"
       (:result (package server-url "base" "info" )) => #"\n\t\tInformation on package 'base'.*")
@@ -86,3 +86,6 @@
 
 (fact "can execute Rmd script in package of library"
       (:result  (object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")(object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")) => (n-of anything 12))
+
+(fact "can set query params"
+      (:result (object server-url :library "datasets" :data "mtcars" nil :tab {:sep "\"|\""})) => (contains "|145|175|"))

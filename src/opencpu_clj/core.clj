@@ -16,7 +16,7 @@
   "Retrieves a dataset from an already installed R package on the OpenCPU server.
   It gets returned as a core.matrix.dataset"
   [server-url package-name dataset-path]
-  (let [resp (ocpu/object server-url :library package-name :data dataset-path nil :json)
+  (let [resp (ocpu/object server-url :library package-name :data dataset-path nil :json nil)
          status (:status resp)]
   (if (= 200 status)
     {:result (json-to-ds (:result resp)) :status status }
@@ -55,7 +55,7 @@
  If the return value cannot be converted to json by OpenCPU, this function will fail."
 (defn call-function-json-RPC
   [server-url package-name function-name params]
-  (ocpu/object server-url :library package-name :R function-name params :json))
+  (ocpu/object server-url :library package-name :R function-name params :json nil))
 
 
 (defn- get-data [server-url session variable output-format]
