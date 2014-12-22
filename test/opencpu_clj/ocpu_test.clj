@@ -8,6 +8,9 @@
 (fact "can call function which returns session"
       (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})) => (n-of anything 6))
 
+(fact "can use keywords for package and object"
+      (:result (object server-url :library :base :R :seq {:from 1 :to 5})) => (n-of anything 6))
+
 (fact "can call function as json which returns vector"
       (:result (object  server-url :library "base" :R  "seq" {:from 1 :to 5} :json nil)) => [1 2 3 4 5])
 
@@ -76,10 +79,8 @@
 (fact "can get info on a package"
       (:result (library server-url "jsonlite")) => (contains "\n\t\tInformation on package 'jsonlite'"))
 
-
 (fact "can execute R gist file"
       (:result  (object server-url :gist "behrica" "6f9e20e30387038ad0a6" "gistfile1.r")) => (n-of anything 5))
-
 
 (fact "can execute R script in package of library"
       (:result  (object server-url :script "library" "MASS" "scripts/ch01.R")) => (n-of anything 13))

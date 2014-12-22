@@ -6,12 +6,16 @@
 ; The methods in here should be only thin wrappers arround the http API and do not convert input and ouput data,
 ; but transfer data as-is.
 
+
+(defn- make-path [parts]
+  (clojure.string/join "/" (map name (filter #(not (nil? %)) parts))))
+
 (defn- make-package-url [base-url library-name package-name]
-    (format "%s/ocpu/%s/%s" base-url (name library-name) package-name))
+  (make-path [base-url "ocpu" library-name package-name]))
 
 
 (defn- make-post-R-url [base-url library-name package-name function-name output-format]
-  (format "%s/R/%s/%s " (make-package-url base-url library-name package-name) function-name (name output-format)))
+  (make-path [ (make-package-url base-url library-name package-name) "R" function-name output-format]))
 
 (defn- do-post [url params]
   (let [response (client/post url (merge (params-map params)
@@ -72,13 +76,11 @@
   (object base-url library-name package-name object-type object-name params "" nil))
   ([base-url library-name package-name object-type object-name params output-format query-params]
      (cond
-      (= library-name :gist) (do-post (clojure.string/join "/" [base-url "ocpu" "gist" package-name object-type object-name]) {} )
-      (= library-name :script) (do-post (clojure.string/join "/" [base-url "ocpu" package-name object-type object-name]) {} )
+      (= library-name :gist) (do-post (make-path [base-url "ocpu" "gist" package-name object-type object-name]) {} )
+      (= library-name :script) (do-post (make-path [base-url "ocpu" package-name object-type object-name]) {} )
       (and params (= :R object-type)) (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
-      :else (get-body (clojure.string/join "/" (filter #(not (nil? %)) [ (make-package-url base-url library-name package-name)
-                                                                                  (name object-type)
-                                                                                  object-name
-                                                                                  (name output-format)]))
+      :else (get-body (make-path (filter #(not (nil? %)) [(make-package-url base-url library-name package-name)
+                                                           object-type object-name output-format]))
                       query-params))))
 
 (defn session
@@ -89,7 +91,7 @@
   Returns a map with keys :result and :status , containing the result of the call or an error message.
   The value of :status is the http status code."
   [base-url session-path output-format]
-  (get-body (format "%s/%s/%s" base-url session-path (name output-format))))
+  (get-body (make-path [base-url session-path output-format])))
 
 
 (defn library
@@ -102,7 +104,7 @@
   Returns a map with keys :result and :status , containing the result of the call or an error message.
   The value of :status is the http status code."
   ([base-url]
-   (get-body (format "%s/ocpu/library" base-url)))
+   (get-body (make-path [ base-url "ocpu" "library"])))
 
   ([base-url package-name]
    (get-body (make-package-url base-url :library package-name)))
@@ -110,9 +112,10 @@
   ([base-url package-location-info package-name]
    (get-body (make-package-url
               base-url
-              (format "%s/%s/library"
-                      (name (:type package-location-info))
-                      (name (:user-name package-location-info)))
+              (make-path [
+                          (:type package-location-info)
+                          (:user-name package-location-info)
+                          "library"])
               package-name))))
 
 
@@ -126,6 +129,6 @@
    Returns a map with keys :result and :status , containing the result of the call or an error message.
    The value of :status is the http status code."
   [base-url package-name path & man-params]
-  (get-body (format "%s/%s"
-                  (make-package-url base-url :library package-name)
-                  (clojure.string/join "/" (cons path (map name man-params))))))
+  (get-body (make-path [ (make-package-url base-url :library package-name)
+                         (make-path (cons path man-params))]))
+)

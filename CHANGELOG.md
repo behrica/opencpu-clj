@@ -1,7 +1,10 @@
-Unreleased Version:
 
-- implement file upload(#4)
+ Unreleased Version:
 
+- implemented file upload(#4)
+- implemented gist support(#2)
+- implemented script execution(#6)
+- implemented additional arguments(#1)
 
 Version 0.1:
 
@@ -18,4 +21,4 @@ First implementation of higher level functions:
 - call-function
 - call-function-json-RPC
 - session-data
-    
+
