@@ -1,5 +1,5 @@
 
- Unreleased Version:
+Version 0.2:
 
 - implemented file upload(#4)
 - implemented gist support(#2)
