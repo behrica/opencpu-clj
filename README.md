@@ -33,6 +33,7 @@ The parameters must be named always.
 
 A general call to an R method looks like this:
 ````Clojure
+(use '[opencpu-clj.ocpu])
 
 
 (object "http://public.opencpu.org" :library "stats" :R "rnorm" {:n 10})
