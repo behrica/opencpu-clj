@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/opencpu-clj.svg)](https://clojars.org/opencpu-clj)
+
 # opencpu-clj
 
 A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clojure.
