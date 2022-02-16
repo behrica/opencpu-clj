@@ -18,9 +18,9 @@
   [server-url package-name dataset-path]
   (let [resp (ocpu/object server-url :library package-name :data dataset-path nil :json nil)
          status (:status resp)]
-  (if (= 200 status)
-    {:result (json-to-ds (:result resp)) :status status }
-    resp )))
+   (if (= 200 status)
+     {:result (json-to-ds (:result resp)) :status status}
+     resp)))
 
 
 (defn call-function
@@ -42,20 +42,22 @@
       {:result (nth (s/split (first result) #"/") 3) :status status}
       {:result result :status status})))
 
-(defn session-data [server-url session-key data-path output-format]
+(defn session-data
   "Access to the details of the session data"
+  [server-url session-key data-path output-format]
   (ocpu/session server-url (format "/ocpu/tmp/%s/%s" session-key data-path) output-format))
 
-
-"Calls a function of an installed package on the OpenCPU server.
+(defn call-function-json-RPC
+  "Calls a function of an installed package on the OpenCPU server.
  The parameters to the function are given as a map, which need to match the named parametesr of the
  R function to call. For details on parameter formats and mappings see the documentation.
  The function returns directly the result which format is further detailed in the API documentation.
  This only works for functions, which return 'standart' types, such as vectors, lists, dataframes with numbers and strings in it.
  If the return value cannot be converted to json by OpenCPU, this function will fail."
-(defn call-function-json-RPC
-  [server-url package-name function-name params]
-  (ocpu/object server-url :library package-name :R function-name params :json nil))
+  ([server-url package-name function-name params]
+   (call-function-json-RPC server-url package-name function-name params nil))
+  ([server-url package-name function-name params query-params]
+   (ocpu/object server-url :library package-name :R function-name params :json query-params)))
 
 
 (defn- get-data [server-url session variable output-format]
@@ -71,11 +73,11 @@
   "Evaluates arbitrary R expressions.
   Important: They need to be self contained, as they run in an empty R session."
   ([server-url r-code input-variables out-variables]
-  (eval-R server-url r-code input-variables out-variables :json))
+   (eval-R server-url r-code input-variables out-variables :json))
 
   ([server-url r-code input-variables out-variables output-format]
-  (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
-        response (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})]
-    (if (= 201 (:status response))
-      {:result (into {} (map #(get-data server-url (:result response) % output-format) out-variables))}
-      response))))
+   (let [r-code-enhanced (format "%s%s" (params-to-R input-variables) r-code)
+         response (call-function server-url "evaluate" "evaluate"  {:input r-code-enhanced})]
+     (if (= 201 (:status response))
+       {:result (into {} (map #(get-data server-url (:result response) % output-format) out-variables))}
+       response))))

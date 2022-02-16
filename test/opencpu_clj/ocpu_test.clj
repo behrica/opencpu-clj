@@ -21,16 +21,6 @@
 
 (fact "can access data in package as csv"
       (:result (object server-url :library "MASS" :data "Boston" nil :csv nil)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
-
-(fact "can call method from package on cran"
-      (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json nil)) => [10])
-
-(fact "can call method from github package"
-      (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json nil)) => [-10])
-
-(fact "can list R objects from bioconductor package"
-      (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
-
 (fact "Json RPC to method return class lm fails"
       (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json nil) => {:result "No method asJSON S3 class: lm", :status 400})
 
@@ -76,17 +66,12 @@
 (fact "can get list of R objects from package"
       (:result (package server-url "MASS" "R" )) => #"abbey\n.*")
 
-(fact "can get info on user package"
-      (:result (library server-url {:type :user :user-name "jeroen"} "jsonlite")) => (contains "Information on package 'jsonlite'"))
 
 (fact "can get list of installed packages"
       (:result (library server-url)) => (contains "jsonlite"))
 
 (fact "can get info on a package"
       (:result (library server-url "jsonlite")) => (contains "\n\t\tInformation on package 'jsonlite'"))
-
-(fact "can execute R gist file"
-      (:result  (object server-url :gist "behrica" "6f9e20e30387038ad0a6" "gistfile1.r")) => (n-of anything 5))
 
 (fact "can execute R script in package of library"
       (:result  (object server-url :script "library" "MASS" "scripts/ch01.R")) => (n-of anything 13))
@@ -97,3 +82,20 @@
 
 (fact "can set query params"
       (:result (object server-url :library "datasets" :data "mtcars" nil :tab {:sep "\"|\""})) => (contains "|145|175|"))
+
+
+
+;; (fact "can call method from package on cran"
+;;       (:result  (object server-url :cran "MASS" :R "rational" {:x 10} :json nil)) => [10])
+
+;; (fact "can call method from github package"
+;;       (:result  (object server-url :github "hadley/plyr" :R "desc" {:x 10} :json nil)) => [-10])
+
+;; (fact "can list R objects from bioconductor package"
+;;       (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
+
+;; (fact "can get info on user package"
+;;       (:result (library server-url {:type :user :user-name "jeroen"} "jsonlite")) => (contains "Information on package 'jsonlite'"))
+
+;; (fact "can execute R gist file"
+;;       (:result  (object server-url :gist "behrica" "6f9e20e30387038ad0a6" "gistfile1.r")) => (n-of anything 5))

@@ -18,9 +18,11 @@
 (defn- make-post-R-url [base-url library-name package-name function-name output-format]
   (make-path [ (make-package-url base-url library-name package-name) "R" function-name output-format]))
 
-(defn- do-post [url params]
-  (let [response (client/post url (merge (params-map params)
+(defn- do-post [url params query-params]
+  (let [params-map (params-map params)
+        response (client/post url (merge params-map
                                          {:throw-exceptions false
+                                          :query-params query-params
                                           ;; :debug-body true
                                           ;; :debug true
                                           :as :auto}))
@@ -28,6 +30,7 @@
         body (:body response)]
 
     ;; (println "url: " url)
+    ;; (println "params-map" params-map)
     ;; (println "status: " status)
     ;; (println "!!------------------------------------------------")
     ;; (println body)
@@ -37,9 +40,7 @@
       (not  (contains? #{200 201} status)) {:result body :status status}
       (str/ends-with? url "/json")         {:result body :status status}
       true                                 {:result (clojure.string/split-lines body) :status status}))) ;
-      ;; {:result body  :status status}
-                                        ;todo this is data transformation. Should be on higher level ?
-      
+
 
 (defn- get-body
   ([url]
@@ -89,9 +90,9 @@
    (object base-url library-name package-name object-type object-name params output-format nil))
   ([base-url library-name package-name object-type object-name params output-format query-params]
    (cond
-     (= library-name :gist) (do-post (make-path [base-url "ocpu" "gist" package-name object-type object-name]) {})
-     (= library-name :script) (do-post (make-path [base-url "ocpu" package-name object-type object-name]) {})
-     (and params (= :R object-type)) (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
+     (= library-name :gist) (do-post (make-path [base-url "ocpu" "gist" package-name object-type object-name]) {} query-params)
+     (= library-name :script) (do-post (make-path [base-url "ocpu" package-name object-type object-name]) {} query-params)
+     (and params (= :R object-type)) (do-post (make-post-R-url base-url library-name package-name object-name output-format) params query-params)
      :else (get-body (make-path (filter #(not (nil? %)) [(make-package-url base-url library-name package-name)
                                                          object-type object-name output-format]))
                      query-params))))
