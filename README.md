@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/opencpu-clj.svg)](https://clojars.org/opencpu-clj)
+
 # opencpu-clj
 
 A Clojure library designed to use the [OpenCPU](http://opencpu.org) API from Clojure.
@@ -110,17 +112,17 @@ So the "params" parameter of function 'object' is a map from Keywords to (Json-e
 
 
 Examples:
-
+```
  R type         | R code                            | Clojure Type        | Json representation as Clojure String literal
 ----------------|-----------------------------------|-------------------- |-----------------------
                 |                                   |primitive            | 1  or "1"
  numeric vector |                                   |integer vector       | "[1,2,3]"
  char vector    |                                   |String vector        | "[\"a\",\"b\",\"c\"
- matrix         | matrix(1:4,nrow=2)                |                     | "[[1,3],[2,4]]
+ matrix         | matrix(1:4,nrow=2)                |                     | "[[1,3],[2,4]]"
  dataframe      | data.frame(x=c(1,2),y=c("a","b")  |                     | "[{\"x\":1,\"y\":\"a\"},{\"x\":2,\"y\":\"b\"}]"
  list           | list(1,2)                         |                     | "[[1],[2]]"
  named list     | list(a=1,b=2)                     |                     | "{\"a\":[1],\"b\":[2]} "
-
+```
 
 See here for further information: http://arxiv.org/pdf/1403.2805v1.pdf
 
