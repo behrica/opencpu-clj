@@ -4,14 +4,14 @@
             :license {:name "Eclipse Public License"
                       :url  "http://www.eclipse.org/legal/epl-v10.html"}
             :min-lein-version "2.0.0"
-            :dependencies [[net.mikera/core.matrix "0.31.1"]
+            :dependencies [[net.mikera/core.matrix "0.62.0"]
                             [org.clojure/clojure "1.10.0"]
                             [org.clojure/data.json "2.4.0"]
                             [clj-http "3.12.3"]
-                            [cheshire "5.10.0"]]
+                            [cheshire "5.10.2"]]
             :plugins [[lein-midje-doc "0.0.24"]]
-            :profiles {:dev {:plugins [[lein-midje "3.1.3"]]
-                             :dependencies [[midje "1.6.3"]]}}
+            :profiles {:dev {:plugins [[lein-midje "3.2.1"]]
+                             :dependencies [[midje "1.10.5"]]}}
             :documentation
             {:files
              {"ocpu_test"
