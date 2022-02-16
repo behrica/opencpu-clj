@@ -12,7 +12,7 @@ For the current list of supported API methods see [here] (doc/endpoints.md)
 To use this library, just add
 
 ````Clojure
-[opencpu-clj "0.3.0"]
+[opencpu-clj "0.3.1"]
 ````
 to you project.clj
 
