@@ -88,9 +88,13 @@ So this method can only be called without :json. And the resulting session objec
 An other example is some matrix calculations done in R:
 
 ````Clojure
+(require '[clojure.core.matrix :as m])
+(require '[cheshire.core :as json])
+
 (def m (m/matrix [[13 2][5 4]]))
-(object "https://cloud.opencpu.org" :library "base" :R "eigen" {:x (json/write-str m)} :json)
-=> {:result {:values [14 3], :vectors [[0.8944 -0.1961] [0.4472 0.9806]]}, :status 200}
+(object "https://cloud.opencpu.org" :library "base" :R "eigen" {:x (json/encode m)} :json {:force true})
+
+=> {:result {:values [14 3], :vectors [[0.8944 -0.1961] [0.4472 0.9806]]}, :status 201}
 ````
 
 #### Parameter format for function calls
