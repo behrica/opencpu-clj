@@ -1,6 +1,7 @@
 (ns opencpu-clj.ocpu
   (:require [clj-http.client :as client]
-            [opencpu-clj.utils :refer [params-map]]))
+            [opencpu-clj.utils :refer [params-map]]
+            [clojure.string :as str]))
 
 ; Low level interface to the OpenCPU HTTP Api.
 ; The methods in here should be only thin wrappers arround the http API and do not convert input and ouput data,
@@ -19,32 +20,42 @@
 
 (defn- do-post [url params]
   (let [response (client/post url (merge (params-map params)
-                                     {:throw-exceptions false
-                                      ;:debug-body true
-                                      ;:debug true
-                                      :as :auto}))
+                                         {:throw-exceptions false
+                                          ;; :debug-body true
+                                          ;; :debug true
+                                          :as :auto}))
         status (:status response)
-        body (:body response)
-        ]
-;    (Println "!!------------------------------------------------")
-;    (println body)
-;    (println "!!------------------------------------------------")
-    (if (= 201 status)
-      {:result (clojure.string/split-lines body) :status status} ;todo this is data transformation. Should be on higher level ?
-      {:result body :status status})))
+        body (:body response)]
+
+    ;; (println "url: " url)
+    ;; (println "status: " status)
+    ;; (println "!!------------------------------------------------")
+    ;; (println body)
+    ;; (println "!!------------------------------------------------")
+
+    (cond
+      (not  (contains? #{200 201} status)) {:result body :status status}
+      (str/ends-with? url "/json")         {:result body :status status}
+      true                                 {:result (clojure.string/split-lines body) :status status}))) ;
+      ;; {:result body  :status status}
+                                        ;todo this is data transformation. Should be on higher level ?
+      
 
 (defn- get-body
   ([url]
    ( get-body url nil))
   ([url query-params]
     ;  (println url)
-    (let [resp (client/get url {
-                                ;;  :debug true
-                                :query-params query-params
-                                :as :auto :throw-exceptions false })]
-      {:result (:body resp)
-       :status (:status resp)
-       })))
+   (let [as (cond (str/ends-with? url "/png") :byte-array
+                  true                   :auto)
+         resp (client/get url {
+                               ;;  :debug true
+                               :query-params query-params
+                               :as as
+                               :throw-exceptions false})]
+     {:result (:body resp)
+      :status (:status resp)})))
+       
 
 (defn object
   "Does a call to the OpenCPU 'object' endpoint.
@@ -73,15 +84,17 @@
   ([base-url library-name package-name object-type object-name]
    (object base-url library-name package-name object-type object-name nil))
   ([base-url library-name package-name object-type object-name params]
-  (object base-url library-name package-name object-type object-name params "" nil))
+   (object base-url library-name package-name object-type object-name params "" nil))
+  ([base-url library-name package-name object-type object-name params output-format]
+   (object base-url library-name package-name object-type object-name params output-format nil))
   ([base-url library-name package-name object-type object-name params output-format query-params]
-     (cond
-      (= library-name :gist) (do-post (make-path [base-url "ocpu" "gist" package-name object-type object-name]) {} )
-      (= library-name :script) (do-post (make-path [base-url "ocpu" package-name object-type object-name]) {} )
-      (and params (= :R object-type)) (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
-      :else (get-body (make-path (filter #(not (nil? %)) [(make-package-url base-url library-name package-name)
-                                                           object-type object-name output-format]))
-                      query-params))))
+   (cond
+     (= library-name :gist) (do-post (make-path [base-url "ocpu" "gist" package-name object-type object-name]) {})
+     (= library-name :script) (do-post (make-path [base-url "ocpu" package-name object-type object-name]) {})
+     (and params (= :R object-type)) (do-post (make-post-R-url base-url library-name package-name object-name output-format) params)
+     :else (get-body (make-path (filter #(not (nil? %)) [(make-package-url base-url library-name package-name)
+                                                         object-type object-name output-format]))
+                     query-params))))
 
 (defn session
   "Does a call to the OpenCPU 'session' endpoint.
@@ -130,5 +143,4 @@
    The value of :status is the http status code."
   [base-url package-name path & man-params]
   (get-body (make-path [ (make-package-url base-url :library package-name)
-                         (make-path (cons path man-params))]))
-)
+                         (make-path (cons path man-params))])))

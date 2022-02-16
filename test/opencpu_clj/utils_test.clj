@@ -11,14 +11,15 @@
 
 (fact "converts map with single file and other params"
       (params-map {:a {:file "resources/test.csv"}
-                   :b 1}) => { :multipart [{:name "b" :content 1}
-                                           {:name "a" :content (clojure.java.io/file "resources/test.csv")}]})
+                   :b 1}) => { :multipart [
+                                           {:name "a" :content (clojure.java.io/file "resources/test.csv")}
+                                           {:name "b" :content 1}]})
 
 
 (fact "converts map with multiple files and other params"
       (params-map {:a {:file "resources/test.csv"}
                    :b 1
                    :c {:file "resources/test2.csv"}})
-      => { :multipart [{:name "c" :content (clojure.java.io/file "resources/test2.csv")}
+      => { :multipart [{:name "a" :content (clojure.java.io/file "resources/test.csv")}
                        {:name "b" :content 1}
-                       {:name "a" :content (clojure.java.io/file "resources/test.csv")}]})
+                       {:name "c" :content (clojure.java.io/file "resources/test2.csv")}]})

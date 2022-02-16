@@ -5,17 +5,19 @@
 
 
 
+
+
 (fact "can call function which returns session"
-      (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})) => (n-of anything 6))
+      (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})) => (n-of anything 7))
 
 (fact "can use keywords for package and object"
-      (:result (object server-url :library :base :R :seq {:from 1 :to 5})) => (n-of anything 6))
+      (:result (object server-url :library :base :R :seq {:from 1 :to 5})) => (n-of anything 7))
 
 (fact "can call function as json which returns vector"
       (:result (object  server-url :library "base" :R  "seq" {:from 1 :to 5} :json nil)) => [1 2 3 4 5])
 
 (fact "can access data in package as plain"
-      (:result (object server-url :library "MASS" :data "Boston")) => #"        crim    zn indus chas    nox    rm   age     dis rad tax ptratio  black\n.*")
+      (:result (object server-url :library "MASS" :data "Boston")) => #"     crim    zn indus chas    nox    rm   age    dis rad tax ptratio  black\n.*")
 
 (fact "can access data in package as csv"
       (:result (object server-url :library "MASS" :data "Boston" nil :csv nil)) => #"\"crim\",\"zn\",\"indus\",\"chas\",\"nox.*")
@@ -30,19 +32,23 @@
       (:result  (object server-url :bioc "KEGGREST" :R nil)) => (has-prefix "color.pathway.by.objects"))
 
 (fact "Json RPC to method return class lm fails"
-      (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json nil) => {:result "No method asJSON S3 class: lm\n", :status 400})
+      (object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json nil) => {:result "No method asJSON S3 class: lm", :status 400})
 
 (fact "can upload a file"
-      (last  (:result  (object server-url :library "utils" :R "read.csv" {:skip (j 1) :file {:file "resources/test.csv"}}))) => (contains "test.csv"))
+      (last  (:result  (object server-url :library "utils" :R "read.csv" {:skip (j 1) :file {:file "resources/test.csv"}})))
+      => (contains "test.csv"))
 
 (fact "can upload an other file"
-      (last  (:result  (object server-url :library "utils" :R "read.csv" {:file {:file "resources/test2.csv"}}))) => (contains "test2.csv"))
+      (last  (:result  (object server-url :library "utils" :R "read.csv" {:file {:file "resources/test2.csv"}}))) =>
+      (contains "test2.csv"))
 
 (fact "can upload file with an other parameter"
-      (last  (:result  (object server-url :library "base" :R "file" {:description {:file "resources/test.csv"}}))) (contains "test.csv") )
+      (last  (:result  (object server-url :library "base" :R "file" {:description {:file "resources/test.csv"}})))
+      (contains "test.csv"))
 
 (fact "uses other param in file upload"
-      (:result  (object server-url :library "base" :R "file" {:blub "1"  :description {:file "resources/test.csv"}})) => (contains "blub")  )
+      (:result  (object server-url :library "base" :R "file" {:blub "1"  :description {:file "resources/test.csv"}}))
+      => (contains "blub"))
 
 (fact "can access session path as json"
       (let [first-key-path (first (:result (object server-url :library "base" :R "seq" {:from 1 :to 5})))]
@@ -71,7 +77,7 @@
       (:result (package server-url "MASS" "R" )) => #"abbey\n.*")
 
 (fact "can get info on user package"
-      (:result (library "http://public.opencpu.org" {:type :user :user-name "jeroen"} "jsonlite")) => (contains "Information on package 'jsonlite'"))
+      (:result (library server-url {:type :user :user-name "jeroen"} "jsonlite")) => (contains "Information on package 'jsonlite'"))
 
 (fact "can get list of installed packages"
       (:result (library server-url)) => (contains "jsonlite"))
@@ -86,7 +92,8 @@
       (:result  (object server-url :script "library" "MASS" "scripts/ch01.R")) => (n-of anything 13))
 
 (fact "can execute Rmd script in package of library"
-      (:result  (object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")(object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")) => (n-of anything 12))
+      (:result  (object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd")(object server-url :script "library" "knitr" "examples/knitr-minimal.Rmd"))
+      => (n-of anything 13))
 
 (fact "can set query params"
       (:result (object server-url :library "datasets" :data "mtcars" nil :tab {:sep "\"|\""})) => (contains "|145|175|"))
