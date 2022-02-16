@@ -38,7 +38,7 @@ A general call to an R method looks like this:
 (use '[opencpu-clj.ocpu])
 
 
-(object "http://public.opencpu.org" :library "stats" :R "rnorm" {:n 10})
+(object "https://cloud.opencpu.org" :library "stats" :R "rnorm" {:n 10})
 => {:result ["/ocpu/tmp/x047c97a725/R/.val" "/ocpu/tmp/x047c97a725/stdout" "/ocpu/tmp/x047c97a725/source" "/ocpu/tmp/x047c97a725/console" "/ocpu/tmp/x047c97a725/info" "/ocpu/tmp/x047c97a725/files/DESCRIPTION"], :status 201}
 1f6261fc3/info" "/ocpu/tmp/x01f6261fc3/files/DESCRIPTION"]
 (session "https://cloud.opencpu.org" "/ocpu/tmp/x047c97a725/R/.val" :json )
@@ -79,7 +79,7 @@ So the following will work, because the "seq" function returns a vector of numer
 
 To call the "lm" method like this, will fail, as it returns the R class "lm", which cannot be marshalled to Json by the JSONlite library used by the opencpu server.
 ````Clojure
-(object server-url :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json)
+(object "https://cloud.opencpu.org" :library "stats" :R "lm" {:formula "dist ~ speed" :data "cars"} :json)
 => {:result "No method asJSON S3 class: lm\n", :status 400}
 ````
 So this method can only be called without :json. And the resulting session objects can then be used as parameters in further calls.
